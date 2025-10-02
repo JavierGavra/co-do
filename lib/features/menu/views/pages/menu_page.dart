@@ -1,9 +1,35 @@
+import 'dart:async';
+
 import 'package:codo/core/utils/time/time_utils.dart';
 import 'package:codo/features/menu/views/widgets/menu_button_widget.dart';
+import 'package:codo/features/my_day/views/pages/my_day_page.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
+
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+      const Duration(milliseconds: 100),
+      () => _nextPage(context, MyDayPage()),
+    );
+  }
+
+  void _nextPage(BuildContext context, Widget page) {
+    context.pushTransition(
+      type: PageTransitionType.rightToLeft,
+      curve: Curves.easeInOutCubic,
+      child: page,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +45,7 @@ class MenuPage extends StatelessWidget {
             children: [
               SizedBox(height: 2),
               MenuButtonWidget(
-                onTap: () => Navigator.pop(context),
+                onTap: () => _nextPage(context, MyDayPage()),
                 icon: Icons.wb_sunny_outlined,
                 iconColor: color.primary,
                 label: "Hariku",
@@ -65,7 +91,6 @@ class MenuPage extends StatelessWidget {
   }
 
   //============================================================================
-
   AppBar _appbar() {
     return AppBar(
       toolbarHeight: 64,

@@ -1,7 +1,11 @@
 import 'package:codo/core/constant/image_assets.dart';
 import 'package:codo/core/utils/time/time_utils.dart';
+import 'package:codo/core/widgets/add_task_bottom_sheet.dart';
 import 'package:codo/features/menu/views/pages/menu_page.dart';
+import 'package:codo/features/my_day/models/task.dart';
+import 'package:codo/features/my_day/views/widgets/task_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:page_transition/page_transition.dart';
 
 class MyDayPage extends StatefulWidget {
@@ -12,7 +16,7 @@ class MyDayPage extends StatefulWidget {
 }
 
 class _MyDayPageState extends State<MyDayPage> {
-  final double _collapsedHeight = 64;
+  final double _collapsedHeight = 56;
   final double _expandedHeight = 146;
 
   late ScrollController _scrollController;
@@ -42,6 +46,7 @@ class _MyDayPageState extends State<MyDayPage> {
     final isDark = Theme.brightnessOf(context) == Brightness.dark;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Image.asset(
@@ -52,12 +57,19 @@ class _MyDayPageState extends State<MyDayPage> {
           CustomScrollView(
             controller: _scrollController,
             slivers: [
-              _sliverAppBar(),
-              SliverToBoxAdapter(
-                child: Container(
-                  height: 3140,
-                  width: double.infinity,
-                  // color: color.surface.withValues(alpha: 0.5),
+              _sliverAppBar(color),
+              SliverPadding(
+                padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 100),
+                sliver: SliverMasonryGrid(
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final model = Task.dummy()[index];
+                    return TaskCardWidget(model);
+                  }, childCount: Task.dummy().length),
                 ),
               ),
             ],
@@ -65,7 +77,7 @@ class _MyDayPageState extends State<MyDayPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => showAddTaskBottomSheet(context),
         backgroundColor: color.primary,
         foregroundColor: color.onPrimary,
         child: Icon(Icons.add_rounded),
@@ -75,31 +87,20 @@ class _MyDayPageState extends State<MyDayPage> {
 
   //============================================================================
 
-  Widget _sliverAppBar() {
-    return SliverAppBar(
-      pinned: true,
-      foregroundColor: Colors.white,
-      backgroundColor: Colors.transparent,
-      forceMaterialTransparency: true,
-      expandedHeight: _expandedHeight,
-      collapsedHeight: _collapsedHeight,
-      leading: IconButton(
-        onPressed: () {
-          context.pushTransition(
-            type: PageTransitionType.leftToRight,
-            curve: Curves.easeInOutCubic,
-            child: MenuPage(),
-          );
-        },
-        icon: Icon(Icons.menu_rounded),
-      ),
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded)),
-      ],
-      title: ValueListenableBuilder(
-        valueListenable: _isCollapsed,
-        builder: (context, value, child) {
-          return AnimatedOpacity(
+  Widget _sliverAppBar(ColorScheme color) {
+    return ValueListenableBuilder(
+      valueListenable: _isCollapsed,
+      builder: (context, value, child) {
+        return SliverAppBar(
+          pinned: true,
+          foregroundColor: value ? color.onSurface : Colors.white,
+          backgroundColor: value ? color.surfaceContainer : Colors.transparent,
+          expandedHeight: _expandedHeight,
+          collapsedHeight: _collapsedHeight,
+          actions: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded)),
+          ],
+          title: AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
             opacity: value ? 1 : 0,
             child: Column(
@@ -119,38 +120,38 @@ class _MyDayPageState extends State<MyDayPage> {
                 ),
               ],
             ),
-          );
-        },
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        titlePadding: EdgeInsets.only(left: 16),
-        collapseMode: CollapseMode.pin,
-        background: Container(
-          padding: EdgeInsets.only(left: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Selamat ${TimeUtils.currentDaylight}",
-                style: TextStyle(
-                  fontSize: 32,
-                  color: Colors.white,
-                  height: 1.5,
-                ),
-              ),
-              Text(
-                TimeUtils.currentDate,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xffdee3e5),
-                  height: 1.33,
-                ),
-              ),
-            ],
           ),
-        ),
-      ),
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: EdgeInsets.only(left: 16),
+            collapseMode: CollapseMode.pin,
+            background: Container(
+              padding: EdgeInsets.only(left: 16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Selamat ${TimeUtils.currentDaylight}",
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                      height: 1.5,
+                    ),
+                  ),
+                  Text(
+                    TimeUtils.currentDate,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xffdee3e5),
+                      height: 1.33,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

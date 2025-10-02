@@ -1,5 +1,5 @@
 import 'package:codo/core/theme/theme.dart';
-import 'package:codo/features/my_day/views/pages/my_day_page.dart';
+import 'package:codo/features/menu/views/pages/menu_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         colorScheme: MaterialTheme.darkScheme(),
         useMaterial3: true,
       ),
-      home: const MyDayPage(),
+      home: const MenuPage(),
     );
   }
 }
