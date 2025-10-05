@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:codo/core/utils/time/time_utils.dart';
+import 'package:codo/core/widgets/add_task_bottom_sheet.dart';
 import 'package:codo/features/menu/views/widgets/menu_button_widget.dart';
 import 'package:codo/features/my_day/views/pages/my_day_page.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +60,7 @@ class _MenuPageState extends State<MenuPage> {
                 amount: 64,
               ),
               _horizontalLine(color),
-              Container(
-                // color: Colors.amber,
+              Padding(
                 padding: const EdgeInsets.only(left: 16, right: 4),
                 child: Row(
                   children: [
@@ -82,7 +82,7 @@ class _MenuPageState extends State<MenuPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => showAddTaskBottomSheet(context),
         backgroundColor: color.primary,
         foregroundColor: color.onPrimary,
         child: Icon(Icons.add_rounded),

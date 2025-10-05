@@ -1,12 +1,12 @@
 import 'package:codo/core/constant/image_assets.dart';
 import 'package:codo/core/utils/time/time_utils.dart';
 import 'package:codo/core/widgets/add_task_bottom_sheet.dart';
-import 'package:codo/features/menu/views/pages/menu_page.dart';
+import 'package:codo/features/my_day/cubit/my_day_cubit.dart';
 import 'package:codo/features/my_day/models/task.dart';
 import 'package:codo/features/my_day/views/widgets/task_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:page_transition/page_transition.dart';
 
 class MyDayPage extends StatefulWidget {
   const MyDayPage({super.key});
@@ -25,6 +25,7 @@ class _MyDayPageState extends State<MyDayPage> {
   @override
   void initState() {
     super.initState();
+    context.read<MyDayCubit>().getAllTask();
     _scrollController = ScrollController()
       ..addListener(() {
         _isCollapsed.value =
@@ -58,26 +59,37 @@ class _MyDayPageState extends State<MyDayPage> {
             controller: _scrollController,
             slivers: [
               _sliverAppBar(color),
-              SliverPadding(
-                padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 100),
-                sliver: SliverMasonryGrid(
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final model = Task.dummy()[index];
-                    return TaskCardWidget(model);
-                  }, childCount: Task.dummy().length),
-                ),
+              BlocConsumer<MyDayCubit, MyDayState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return SliverPadding(
+                    padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 100),
+                    sliver: SliverMasonryGrid(
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      gridDelegate:
+                          SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final Task model = state.tasks[index];
+                        return TaskCardWidget(model);
+                      }, childCount: state.tasks.length),
+                    ),
+                  );
+                },
               ),
             ],
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showAddTaskBottomSheet(context),
+        onPressed: () async {
+          final task = await showAddTaskBottomSheet<Task>(context);
+          if (task != null && context.mounted) {
+            context.read<MyDayCubit>().addTask(task);
+          }
+        },
         backgroundColor: color.primary,
         foregroundColor: color.onPrimary,
         child: Icon(Icons.add_rounded),
