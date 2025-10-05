@@ -15,7 +15,7 @@ class TaskCardWidget extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
 
     final daydifference = (data.dueDate != null)
-        ? DateTime(2025, 3, 3).difference(data.dueDate!).inDays
+        ? DateTime.now().difference(data.dueDate!).inDays
         : null;
     final dueColor = (daydifference != null)
         ? daydifference < -10
