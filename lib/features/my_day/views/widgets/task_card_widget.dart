@@ -1,3 +1,9 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:codo/core/constant/audio_assets.dart';
+import 'package:codo/core/utils/clipper/diagonal_clipper.dart';
+import 'package:codo/core/widgets/custom_check_box.dart';
+import 'package:codo/core/widgets/custom_snackbar.dart';
+import 'package:codo/core/widgets/delete_dialog.dart';
 import 'package:codo/core/widgets/tag_chip.dart';
 import 'package:codo/features/my_day/cubit/my_day_cubit.dart';
 import 'package:codo/features/my_day/models/task.dart';
@@ -7,125 +13,170 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class TaskCardWidget extends StatelessWidget {
-  const TaskCardWidget(this.data, {super.key});
-  final Task data;
+  const TaskCardWidget(this.task, {super.key});
+  final Task task;
+
+  Future<void> _onChecked(BuildContext context) async {
+    if (!task.status) {
+      await AudioPlayer().play(AssetSource(AudioAssets.taskDone));
+      if (context.mounted) showSnackBar(context, SnackBarType.taskComplete);
+    }
+    if (context.mounted) {
+      context.read<MyDayCubit>().taskChecked(task.id, !task.status);
+    }
+  }
+
+  void _onLongPress(BuildContext context) async {
+    HapticFeedback.lightImpact();
+    final isYes = await showDeleteDialog(context: context);
+    if (isYes && context.mounted) {
+      context.read<MyDayCubit>().deleteTask(task.id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
 
-    final daydifference = (data.dueDate != null)
-        ? DateTime.now().difference(data.dueDate!).inDays
+    final daydifference = (task.dueDate != null)
+        ? DateTime.now().difference(task.dueDate!).inDays
         : null;
+
     final dueColor = (daydifference != null)
         ? daydifference < -10
               ? color.secondary
               : color.error
         : null;
 
+    final isLessThan3Days = (daydifference != null && daydifference >= -3);
+
     return Material(
-      color: color.surfaceContainerLow,
+      color: task.status ? color.surfaceDim : color.surfaceContainerLow,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () {
           print("Card");
         },
-        onLongPress: () {
-          HapticFeedback.lightImpact();
-          context.read<MyDayCubit>().deleteTask(data.id);
-        },
+        onLongPress: () => _onLongPress(context),
         borderRadius: BorderRadius.circular(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-              child: Column(
+              padding: const EdgeInsets.only(left: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Checkbox(
-                  //   value: false,
-                  //   onChanged: (value) {
-                  //     print("Check");
-                  //   },
-                  //   shape: CircleBorder(),
-                  // ),
-
-                  // Title
-                  Text(
-                    data.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      height: 1.5,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: CustomCheckBox(
+                      value: task.status,
+                      onTap: () => _onChecked(context),
                     ),
                   ),
-
-                  // Due Date
-                  if (data.dueDate != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 5,
-                        children: [
-                          Icon(
-                            Icons.calendar_month_outlined,
-                            color: dueColor,
-                            size: 16,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 1),
-                            child: Text(
-                              DateFormat(
-                                'HH:mm - d MMM y',
-                              ).format(data.dueDate!),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: dueColor,
-                                fontSize: 11,
-                                height: 1.45,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  // Note
-                  if (data.note != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        data.note!,
-                        style: TextStyle(
-                          color: color.onSurfaceVariant,
-                          fontSize: 13,
-                          height: 1.53,
-                        ),
-                      ),
-                    ),
+                  if (isLessThan3Days) _warningMark(),
                 ],
               ),
             ),
 
-            if (data.tags.isNotEmpty)
-              Column(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 7, 12, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(height: 2, color: color.surfaceContainerHighest),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 9),
-                    child: Wrap(
-                      runSpacing: 6,
-                      children: [TagChip(data.tags.elementAt(0))],
-                    ),
-                  ),
+                  _title(color),
+                  if (task.dueDate != null) _dueDate(dueColor),
+                  if (task.note != null) _note(color),
                 ],
               ),
+            ),
+
+            if (task.tags.isNotEmpty) _tags(color),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _warningMark() {
+    return ClipPath(
+      clipper: DiagonalClipper(),
+      child: Container(
+        height: 24,
+        width: 24,
+        decoration: BoxDecoration(
+          color: Color(0xffE51111),
+          borderRadius: BorderRadius.only(topRight: Radius.circular(12)),
+        ),
+      ),
+    );
+  }
+
+  Widget _title(ColorScheme color) {
+    return Text(
+      task.title,
+      style: TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+        height: 1.5,
+        color: task.status ? color.onSurfaceVariant : color.onSurface,
+      ),
+    );
+  }
+
+  dynamic _dueDate(Color? dueColor) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: 5,
+        children: [
+          Icon(Icons.calendar_month_outlined, color: dueColor, size: 16),
+          Padding(
+            padding: const EdgeInsets.only(top: 1),
+            child: Text(
+              DateFormat('HH:mm - d MMM y').format(task.dueDate!),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: dueColor,
+                fontSize: 11,
+                height: 1.45,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _note(ColorScheme color) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Text(
+        task.note!,
+        style: TextStyle(
+          color: color.onSurfaceVariant,
+          fontSize: 13,
+          height: 1.53,
+        ),
+      ),
+    );
+  }
+
+  Widget _tags(ColorScheme color) {
+    return Column(
+      children: [
+        Container(height: 2, color: color.surfaceContainerHighest),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 9),
+          child: Wrap(
+            runSpacing: 6,
+            children: [TagChip(task.tags.elementAt(0))],
+          ),
+        ),
+      ],
     );
   }
 }

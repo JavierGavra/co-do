@@ -35,7 +35,8 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         due_date_time DATETIME,
-        note TEXT
+        note TEXT,
+        status BOOLEAN DEFAULT FALSE
       )
     ''');
 

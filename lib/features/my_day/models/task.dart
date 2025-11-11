@@ -3,6 +3,7 @@ class Task {
   String title;
   DateTime? dueDate;
   String? note;
+  bool status;
   Set<Tag> tags;
 
   Task({
@@ -11,6 +12,7 @@ class Task {
     required this.dueDate,
     this.note,
     this.tags = const {},
+    this.status = false,
   });
 
   factory Task.fromMap(Map<String, dynamic> data) {
@@ -21,6 +23,7 @@ class Task {
           ? DateTime.parse(data["due_date_time"])
           : null,
       note: data["note"],
+      status: (data['status'] == 1),
     );
   }
 
@@ -29,6 +32,7 @@ class Task {
       "title": title,
       "due_date_time": (dueDate != null) ? dueDate!.toIso8601String() : null,
       "note": note,
+      "status": status,
     };
   }
 }

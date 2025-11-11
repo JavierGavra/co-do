@@ -35,7 +35,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 
     return Padding(
       padding: EdgeInsets.only(
-        bottom: (MediaQuery.viewInsetsOf(context).bottom > 0) ? 305 : 0,
+        bottom: (MediaQuery.viewInsetsOf(context).bottom > 0) ? 325 : 0,
       ),
       child: Container(
         width: double.infinity,
