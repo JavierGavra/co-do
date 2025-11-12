@@ -63,6 +63,28 @@ class _MyDayPageState extends State<MyDayPage> {
                 listener: (context, state) {},
                 builder: (context, state) {
                   return SliverPadding(
+                    padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 0),
+                    sliver: SliverMasonryGrid(
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      gridDelegate:
+                          SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final Task model = state.undoneTasks[index];
+                        return TaskCardWidget(model);
+                      }, childCount: state.undoneTasks.length),
+                    ),
+                  );
+                },
+              ),
+
+              // Sementara
+              BlocConsumer<MyDayCubit, MyDayState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return SliverPadding(
                     padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 100),
                     sliver: SliverMasonryGrid(
                       mainAxisSpacing: 10,
@@ -72,9 +94,9 @@ class _MyDayPageState extends State<MyDayPage> {
                             crossAxisCount: 2,
                           ),
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        final Task model = state.tasks[index];
+                        final Task model = state.doneTasks[index];
                         return TaskCardWidget(model);
-                      }, childCount: state.tasks.length),
+                      }, childCount: state.doneTasks.length),
                     ),
                   );
                 },
@@ -106,7 +128,7 @@ class _MyDayPageState extends State<MyDayPage> {
         return SliverAppBar(
           pinned: true,
           foregroundColor: value ? color.onSurface : Colors.white,
-          backgroundColor: value ? color.surfaceContainer : Colors.transparent,
+          backgroundColor: value ? color.surface : Colors.transparent,
           expandedHeight: _expandedHeight,
           collapsedHeight: _collapsedHeight,
           actions: [
