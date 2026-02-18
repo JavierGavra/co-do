@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 class MenuButtonWidget extends StatelessWidget {
   const MenuButtonWidget({
     super.key,
+    this.amount = 0,
+    required this.label,
     required this.icon,
     required this.iconColor,
-    required this.label,
+    this.splashColor,
     required this.onTap,
-    this.amount = 0,
   });
+  final int amount;
+  final String label;
   final IconData icon;
   final Color iconColor;
-  final String label;
+  final Color? splashColor;
   final VoidCallback onTap;
-  final int amount;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class MenuButtonWidget extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
+      splashColor: splashColor,
       child: Ink(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

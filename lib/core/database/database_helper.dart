@@ -25,8 +25,7 @@ class DatabaseHelper {
       CREATE TABLE tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title VARCHAR(30) NOT NULL,
-        background_hex TEXT NOT NULL,
-        background_dark_status BOOLEAN NOT NULL
+        background_hex TEXT NOT NULL
       )
     ''');
 
@@ -36,31 +35,10 @@ class DatabaseHelper {
         title TEXT NOT NULL,
         due_date_time DATETIME,
         note TEXT,
-        status BOOLEAN DEFAULT FALSE
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE task_tags (
-        task_id INTEGER NOT NULL,
+        status BOOLEAN DEFAULT FALSE,
         tag_id INTEGER NOT NULL,
-        PRIMARY KEY (task_id, tag_id),
-        FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE,
-        FOREIGN KEY (tag_id) REFERENCES tagss(id) ON DELETE CASCADE
+        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
       )
     ''');
-  }
-
-  Future<int> insertTag({
-    required String title,
-    required String backgroundHex,
-    required bool isBackgroundDark,
-  }) async {
-    final db = await instance.database;
-    return await db.insert("tags", {
-      'title': title,
-      'background_hex': backgroundHex,
-      'background_dark_status': isBackgroundDark,
-    });
   }
 }
