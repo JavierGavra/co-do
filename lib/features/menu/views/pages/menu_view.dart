@@ -1,6 +1,6 @@
 import 'package:codo/core/utils/time/time_utils.dart';
-import 'package:codo/core/widgets/custom_snackbar.dart';
-import 'package:codo/core/widgets/loading_dialog.dart';
+import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
+import 'package:codo/core/widgets/dialog/loading_dialog.dart';
 import 'package:codo/features/menu/bloc/menu_bloc.dart';
 import 'package:codo/features/menu/models/tag.dart';
 import 'package:codo/features/menu/views/widgets/create_tags_dialog.dart';

@@ -1,10 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:codo/core/constant/audio_assets.dart';
 import 'package:codo/core/utils/clipper/diagonal_clipper.dart';
-import 'package:codo/core/widgets/custom_check_box.dart';
-import 'package:codo/core/widgets/custom_snackbar.dart';
-import 'package:codo/core/widgets/delete_dialog.dart';
-import 'package:codo/core/widgets/tag_chip.dart';
+import 'package:codo/features/my_day/views/widgets/custom_check_box.dart';
+import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
+import 'package:codo/core/widgets/dialog/delete_dialog.dart';
+import 'package:codo/features/my_day/views/widgets/tag_chip.dart';
 import 'package:codo/features/my_day/cubit/my_day_cubit.dart';
 import 'package:codo/features/my_day/models/task.dart';
 import 'package:flutter/material.dart';

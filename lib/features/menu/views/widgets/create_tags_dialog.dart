@@ -1,4 +1,4 @@
-import 'package:codo/core/widgets/color_picker_dialog.dart';
+import 'package:codo/core/widgets/dialog/color_picker_dialog.dart';
 import 'package:codo/features/menu/models/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';

@@ -1,5 +1,5 @@
-import 'package:codo/core/widgets/due_date_field.dart';
-import 'package:codo/core/widgets/due_time_field.dart';
+import 'package:codo/features/my_day/views/widgets/due_date_field.dart';
+import 'package:codo/features/my_day/views/widgets/due_time_field.dart';
 import 'package:codo/features/my_day/models/task.dart';
 import 'package:flutter/material.dart';
 
