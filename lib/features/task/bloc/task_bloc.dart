@@ -12,6 +12,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   TaskBloc() : super(TaskState.initial()) {
     on<MyDayTask>(_onMyDayTask);
+    on<GetAllTask>(_onGetAllTask);
     on<CreateTask>(_onCreateTask);
     on<DeleteTask>(_onDeleteTask);
     on<CheckTask>(_onCheckTask);
@@ -33,6 +34,24 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 
   Future<void> _onMyDayTask(MyDayTask event, Emitter<TaskState> emit) async {
+    emit(state.copyWith(action: TaskStateAction.getTask));
+    try {
+      final List<Task> tasks = await _localService.getMyDayTasks();
+      final (doneTasks, undoneTasks) = _separateTasks(tasks);
+
+      emit(
+        state.copyWith(
+          status: TaskStateStatus.success,
+          doneTasks: doneTasks,
+          undoneTasks: undoneTasks,
+        ),
+      );
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
+  }
+
+  Future<void> _onGetAllTask(GetAllTask event, Emitter<TaskState> emit) async {
     emit(state.copyWith(action: TaskStateAction.getTask));
     try {
       final List<Task> tasks = await _localService.getAllTasks();

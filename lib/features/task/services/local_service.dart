@@ -30,7 +30,7 @@ class LocalService {
 
     final data = await db.query(
       "tasks",
-      where: "due_date_time >= ?",
+      where: "due_date_time <= ? OR due_date_time IS NULL",
       whereArgs: [endOfDateRange.toIso8601String()],
       orderBy: "due_date_time ASC",
     );
