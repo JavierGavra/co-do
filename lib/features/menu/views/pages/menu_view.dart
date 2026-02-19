@@ -5,7 +5,7 @@ import 'package:codo/features/menu/bloc/menu_bloc.dart';
 import 'package:codo/features/menu/models/tag.dart';
 import 'package:codo/features/menu/views/widgets/create_tags_dialog.dart';
 import 'package:codo/features/menu/views/widgets/menu_button_widget.dart';
-import 'package:codo/features/my_day/views/pages/my_day_page.dart';
+import 'package:codo/features/task/views/pages/task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
@@ -27,7 +27,7 @@ class MenuView extends StatelessWidget {
     } else if (state.status == MenuStateStatus.success) {
       Navigator.of(context).pop();
       if (state.action == MenuStateAction.startMenu && context.mounted) {
-        _nextPage(context, const MyDayPage());
+        _nextPage(context, const TaskPage.myDay());
       }
     } else if (state.status == MenuStateStatus.failure) {
       showSnackBar(context, SnackBarType.failure);
@@ -57,14 +57,14 @@ class MenuView extends StatelessWidget {
               children: [
                 SizedBox(height: 2),
                 MenuButtonWidget(
-                  onTap: () => _nextPage(context, MyDayPage()),
+                  onTap: () => _nextPage(context, TaskPage.myDay()),
                   icon: Icons.wb_sunny_outlined,
                   iconColor: color.primary,
                   label: "Hariku",
                   amount: 5,
                 ),
                 MenuButtonWidget(
-                  onTap: () {},
+                  onTap: () => _nextPage(context, TaskPage.all()),
                   icon: Icons.assignment_outlined,
                   iconColor: color.secondary,
                   label: "Semua Tugas",

@@ -1,12 +1,12 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:codo/core/constant/audio_assets.dart';
 import 'package:codo/core/utils/clipper/diagonal_clipper.dart';
-import 'package:codo/features/my_day/views/widgets/custom_check_box.dart';
+import 'package:codo/features/task/views/widgets/custom_check_box.dart';
 import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
 import 'package:codo/core/widgets/dialog/delete_dialog.dart';
-import 'package:codo/features/my_day/views/widgets/tag_chip.dart';
-import 'package:codo/features/my_day/cubit/my_day_cubit.dart';
-import 'package:codo/features/my_day/models/task.dart';
+import 'package:codo/features/task/views/widgets/tag_chip.dart';
+import 'package:codo/features/task/bloc/task_bloc.dart';
+import 'package:codo/features/task/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +22,9 @@ class TaskCardWidget extends StatelessWidget {
       if (context.mounted) showSnackBar(context, SnackBarType.taskComplete);
     }
     if (context.mounted) {
-      context.read<MyDayCubit>().taskChecked(task.id, !task.status);
+      context.read<TaskBloc>().add(
+        CheckTask(id: task.id, status: !task.status),
+      );
     }
   }
 
@@ -30,7 +32,7 @@ class TaskCardWidget extends StatelessWidget {
     HapticFeedback.lightImpact();
     final isYes = await showDeleteDialog(context: context);
     if (isYes && context.mounted) {
-      context.read<MyDayCubit>().deleteTask(task.id);
+      context.read<TaskBloc>().add(DeleteTask(id: task.id));
     }
   }
 
@@ -92,7 +94,7 @@ class TaskCardWidget extends StatelessWidget {
               ),
             ),
 
-            if (task.tags.isNotEmpty) _tags(color),
+            if (task.tag != null) _tags(color),
           ],
         ),
       ),
@@ -171,10 +173,7 @@ class TaskCardWidget extends StatelessWidget {
         Container(height: 2, color: color.surfaceContainerHighest),
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 9),
-          child: Wrap(
-            runSpacing: 6,
-            children: [TagChip(task.tags.elementAt(0))],
-          ),
+          child: Wrap(runSpacing: 6, children: [TagChip(task.tag!)]),
         ),
       ],
     );

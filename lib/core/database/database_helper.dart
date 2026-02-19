@@ -36,7 +36,7 @@ class DatabaseHelper {
         due_date_time DATETIME,
         note TEXT,
         status BOOLEAN DEFAULT FALSE,
-        tag_id INTEGER NOT NULL,
+        tag_id INTEGER,
         FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
       )
     ''');

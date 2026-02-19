@@ -1,17 +1,19 @@
+import 'package:codo/features/task/models/tag.dart';
+
 class Task {
   int id;
   String title;
   DateTime? dueDate;
   String? note;
   bool status;
-  Set<Tag> tags;
+  Tag? tag;
 
   Task({
     this.id = -1,
     required this.title,
     required this.dueDate,
     this.note,
-    this.tags = const {},
+    this.tag,
     this.status = false,
   });
 
@@ -35,16 +37,4 @@ class Task {
       "status": status,
     };
   }
-}
-
-class Tag {
-  final String text;
-  final String backgroundHex;
-  final bool isBackgroundDark;
-
-  const Tag({
-    required this.text,
-    required this.backgroundHex,
-    this.isBackgroundDark = false,
-  });
 }

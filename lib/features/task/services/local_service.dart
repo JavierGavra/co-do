@@ -1,5 +1,5 @@
 import 'package:codo/core/database/database_helper.dart';
-import '../models/task.dart';
+import 'package:codo/features/task/models/task.dart';
 
 class LocalService {
   final _db = DatabaseHelper.instance;
@@ -15,21 +15,23 @@ class LocalService {
     return List.generate(data.length, (index) => Task.fromMap(data[index]));
   }
 
-  Future<List<Task>> getUndoneTask() async {
+  Future<List<Task>> getMyDayTasks() async {
     final db = await _db.database;
-    final data = await db.query(
-      "tasks",
-      where: 'status = 0',
-      orderBy: "due_date_time ASC",
-    );
-    return List.generate(data.length, (index) => Task.fromMap(data[index]));
-  }
 
-  Future<List<Task>> getDoneTask() async {
-    final db = await _db.database;
+    final now = DateTime.now();
+    final endOfDateRange = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      23,
+      59,
+      59,
+    ).add(const Duration(days: 3));
+
     final data = await db.query(
       "tasks",
-      where: 'status = 1',
+      where: "due_date_time >= ?",
+      whereArgs: [endOfDateRange.toIso8601String()],
       orderBy: "due_date_time ASC",
     );
     return List.generate(data.length, (index) => Task.fromMap(data[index]));

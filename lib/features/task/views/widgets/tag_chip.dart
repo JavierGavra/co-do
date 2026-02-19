@@ -1,4 +1,4 @@
-import 'package:codo/features/my_day/models/task.dart';
+import 'package:codo/features/task/models/tag.dart';
 import 'package:flutter/material.dart';
 
 class TagChip extends StatelessWidget {

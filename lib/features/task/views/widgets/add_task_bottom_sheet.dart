@@ -1,6 +1,6 @@
-import 'package:codo/features/my_day/views/widgets/due_date_field.dart';
-import 'package:codo/features/my_day/views/widgets/due_time_field.dart';
-import 'package:codo/features/my_day/models/task.dart';
+import 'package:codo/features/task/views/widgets/due_date_field.dart';
+import 'package:codo/features/task/views/widgets/due_time_field.dart';
+import 'package:codo/features/task/models/task.dart';
 import 'package:flutter/material.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
