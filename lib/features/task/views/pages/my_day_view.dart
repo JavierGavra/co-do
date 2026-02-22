@@ -71,7 +71,6 @@ class _MyDayViewState extends State<MyDayView> {
                 BlocSelector<TaskBloc, TaskState, List<Task>>(
                   selector: (state) => state.undoneTasks,
                   builder: (context, state) {
-                    print("build(Undone Task)");
                     return SliverPadding(
                       padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 0),
                       sliver: SliverMasonryGrid(
@@ -94,7 +93,6 @@ class _MyDayViewState extends State<MyDayView> {
                 BlocSelector<TaskBloc, TaskState, List<Task>>(
                   selector: (state) => state.doneTasks,
                   builder: (context, state) {
-                    print("build(Done Task)");
                     return SliverPadding(
                       padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 100),
                       sliver: SliverMasonryGrid(
@@ -118,7 +116,7 @@ class _MyDayViewState extends State<MyDayView> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final task = await showAddTaskBottomSheet<Task>(context);
+            final task = await showAddTaskBottomSheet(context);
             if (task != null && context.mounted) {
               context.read<TaskBloc>().add(CreateTask(task: task));
             }

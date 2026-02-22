@@ -1,7 +1,8 @@
 import 'package:codo/features/task/bloc/task_bloc.dart';
-import 'package:codo/features/task/views/pages/my_day_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'my_day_view.dart';
+import 'all_task_view.dart';
 
 enum TaskPageType { myDay, all, byTag }
 
@@ -27,7 +28,7 @@ class TaskPage extends StatelessWidget {
         }),
       child: switch (type) {
         TaskPageType.myDay => MyDayView(),
-        TaskPageType.all => MyDayView(),
+        TaskPageType.all => AllTaskView(),
         TaskPageType.byTag => MyDayView(),
       },
     );

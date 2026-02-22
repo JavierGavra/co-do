@@ -220,8 +220,8 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   }
 }
 
-Future<T?> showAddTaskBottomSheet<T>(BuildContext context) {
-  return showModalBottomSheet<T>(
+Future<Task?> showAddTaskBottomSheet(BuildContext context) {
+  return showModalBottomSheet<Task>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
