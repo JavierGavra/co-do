@@ -13,12 +13,13 @@ import 'package:page_transition/page_transition.dart';
 class MenuView extends StatelessWidget {
   const MenuView({super.key});
 
-  void _nextPage(BuildContext context, Widget page) {
-    context.pushTransition(
+  void _nextPage(BuildContext context, Widget page) async {
+    await context.pushTransition(
       type: PageTransitionType.rightToLeft,
       curve: Curves.easeInOutCubic,
       child: page,
     );
+    if (context.mounted) context.read<MenuBloc>().add(ReloadMenu());
   }
 
   void _listener(BuildContext context, MenuState state) {
@@ -56,19 +57,29 @@ class MenuView extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 2),
-                MenuButtonWidget(
-                  onTap: () => _nextPage(context, TaskPage.myDay()),
-                  icon: Icons.wb_sunny_outlined,
-                  iconColor: color.primary,
-                  label: "Hariku",
-                  amount: 5,
+                BlocSelector<MenuBloc, MenuState, int>(
+                  selector: (state) => state.myDayAmount,
+                  builder: (context, amount) {
+                    return MenuButtonWidget(
+                      onTap: () => _nextPage(context, TaskPage.myDay()),
+                      icon: Icons.wb_sunny_outlined,
+                      iconColor: color.primary,
+                      label: "Hariku",
+                      amount: amount,
+                    );
+                  },
                 ),
-                MenuButtonWidget(
-                  onTap: () => _nextPage(context, TaskPage.all()),
-                  icon: Icons.assignment_outlined,
-                  iconColor: color.secondary,
-                  label: "Semua Tugas",
-                  amount: 64,
+                BlocSelector<MenuBloc, MenuState, int>(
+                  selector: (state) => state.taskAmount,
+                  builder: (context, amount) {
+                    return MenuButtonWidget(
+                      onTap: () => _nextPage(context, TaskPage.all()),
+                      icon: Icons.assignment_outlined,
+                      iconColor: color.secondary,
+                      label: "Semua Tugas",
+                      amount: amount,
+                    );
+                  },
                 ),
                 _horizontalLine(color),
                 Padding(

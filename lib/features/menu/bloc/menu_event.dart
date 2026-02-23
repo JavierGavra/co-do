@@ -9,6 +9,8 @@ sealed class MenuEvent extends Equatable {
 
 class StartMenu extends MenuEvent {}
 
+class ReloadMenu extends MenuEvent {}
+
 class CreateTag extends MenuEvent {
   final Tag tag;
 

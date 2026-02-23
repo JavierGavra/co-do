@@ -11,19 +11,31 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
 
   MenuBloc() : super(MenuState.initial()) {
     on<StartMenu>(_onMenuStarted);
+    on<ReloadMenu>(_onReloadMenu);
     on<CreateTag>(_onCreateTag);
   }
 
-  Future<void> _onMenuStarted(StartMenu event, Emitter<MenuState> emit) async {
+  Future<void> _loadData(MenuEvent event, Emitter<MenuState> emit) async {
     emit(
       MenuState(
         status: MenuStateStatus.loading,
-        action: MenuStateAction.startMenu,
+        action: (event is StartMenu)
+            ? MenuStateAction.startMenu
+            : MenuStateAction.reload,
       ),
     );
     try {
-      final data = await _localService.getTags();
-      emit(state.copyWith(status: MenuStateStatus.success, tags: data));
+      final tags = await _localService.getTags();
+      final myDayAmount = await _localService.getMyDayAmount();
+      final taskAmount = await _localService.getTaskAmount();
+      emit(
+        state.copyWith(
+          status: MenuStateStatus.success,
+          myDayAmount: myDayAmount,
+          taskAmount: taskAmount,
+          tags: tags,
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -32,6 +44,14 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         ),
       );
     }
+  }
+
+  Future<void> _onMenuStarted(StartMenu event, Emitter<MenuState> emit) async {
+    await _loadData(event, emit);
+  }
+
+  Future<void> _onReloadMenu(ReloadMenu event, Emitter<MenuState> emit) async {
+    await _loadData(event, emit);
   }
 
   Future<void> _onCreateTag(CreateTag event, Emitter<MenuState> emit) async {
