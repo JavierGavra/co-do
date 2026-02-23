@@ -71,19 +71,25 @@ class _MyDayViewState extends State<MyDayView> {
                 BlocSelector<TaskBloc, TaskState, List<Task>>(
                   selector: (state) => state.undoneTasks,
                   builder: (context, state) {
-                    return SliverPadding(
-                      padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 0),
-                      sliver: SliverMasonryGrid(
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        gridDelegate:
-                            SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          final Task model = state[index];
-                          return TaskCardWidget(model);
-                        }, childCount: state.length),
+                    return SliverVisibility(
+                      visible: state.isNotEmpty,
+                      sliver: SliverPadding(
+                        padding: EdgeInsetsGeometry.fromLTRB(16, 32, 16, 0),
+                        sliver: SliverMasonryGrid(
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          gridDelegate:
+                              SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final Task model = state[index];
+                            return TaskCardWidget(model);
+                          }, childCount: state.length),
+                        ),
                       ),
                     );
                   },
@@ -94,7 +100,7 @@ class _MyDayViewState extends State<MyDayView> {
                   selector: (state) => state.doneTasks,
                   builder: (context, state) {
                     return SliverPadding(
-                      padding: EdgeInsetsGeometry.fromLTRB(16, 64, 16, 100),
+                      padding: EdgeInsetsGeometry.fromLTRB(16, 32, 16, 100),
                       sliver: SliverMasonryGrid(
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 10,

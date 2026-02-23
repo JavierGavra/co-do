@@ -44,11 +44,10 @@ class TaskCardWidget extends StatelessWidget {
         ? DateTime.now().difference(task.dueDate!).inDays
         : null;
 
-    final dueColor = (daydifference != null)
-        ? daydifference < -10
-              ? color.secondary
-              : color.error
-        : null;
+    final dueColor =
+        (daydifference != null && !task.status && daydifference > -10)
+        ? color.error
+        : color.secondary;
 
     final isLessThan3Days = (daydifference != null && daydifference >= -3);
 
@@ -77,7 +76,7 @@ class TaskCardWidget extends StatelessWidget {
                       onTap: () => _onChecked(context),
                     ),
                   ),
-                  if (isLessThan3Days) _warningMark(),
+                  if (isLessThan3Days && !task.status) _warningMark(),
                 ],
               ),
             ),
@@ -123,6 +122,7 @@ class TaskCardWidget extends StatelessWidget {
         fontSize: 16,
         height: 1.5,
         color: task.status ? color.onSurfaceVariant : color.onSurface,
+        decoration: task.status ? TextDecoration.lineThrough : null,
       ),
     );
   }
