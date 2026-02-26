@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 class DueTimeField extends StatefulWidget {
-  const DueTimeField({super.key, required this.onChanged});
+  const DueTimeField({
+    super.key,
+    required this.initialTime,
+    required this.onChanged,
+  });
 
+  final TimeOfDay initialTime;
   final ValueChanged<TimeOfDay> onChanged;
 
   @override
@@ -10,13 +15,12 @@ class DueTimeField extends StatefulWidget {
 }
 
 class _DueTimeFieldState extends State<DueTimeField> {
-  final ValueNotifier<TimeOfDay> _selecteTime = ValueNotifier(
-    TimeOfDay(hour: 23, minute: 59),
-  );
+  late final ValueNotifier<TimeOfDay> _selecteTime;
 
   @override
   void initState() {
     super.initState();
+    _selecteTime = ValueNotifier(widget.initialTime);
     widget.onChanged(_selecteTime.value);
   }
 

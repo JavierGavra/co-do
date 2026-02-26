@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DueDateField extends StatefulWidget {
-  const DueDateField({super.key, required this.onChanged});
+  const DueDateField({
+    super.key,
+    required this.initialDate,
+    required this.onChanged,
+  });
 
+  final DateTime initialDate;
   final ValueChanged<DateTime> onChanged;
 
   @override
@@ -31,8 +36,10 @@ class _DueDateFieldState extends State<DueDateField> {
               await showDatePicker(
                 context: context,
                 initialDate: _selectedate.value,
-                firstDate: DateTime.now().subtract(const Duration(days: 60)),
-                lastDate: DateTime.now().add(const Duration(days: 60)),
+                firstDate: widget.initialDate.subtract(
+                  const Duration(days: 60),
+                ),
+                lastDate: widget.initialDate.add(const Duration(days: 60)),
               ) ??
               _selectedate.value;
 

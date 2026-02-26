@@ -169,6 +169,7 @@ class TaskCardWidget extends StatelessWidget {
 
   Widget _tags(ColorScheme color) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(height: 2, color: color.surfaceContainerHighest),
         Padding(

@@ -11,8 +11,17 @@ class LocalService {
 
   Future<List<Task>> getAllTasks() async {
     final db = await _db.database;
-    final data = await db.query("tasks", orderBy: "due_date_time ASC");
-    return List.generate(data.length, (index) => Task.fromMap(data[index]));
+    final data = await db.rawQuery('''
+      SELECT 
+        tasks.*,
+        tags.id AS tag_id,
+        tags.title AS tag_title,
+        tags.background_hex AS tag_background_hex
+      FROM tasks
+      LEFT JOIN tags ON tasks.tag_id = tags.id
+      ORDER BY tasks.due_date_time ASC
+    ''');
+    return data.map((x) => Task.fromMap(x)).toList();
   }
 
   Future<List<Task>> getMyDayTasks() async {
@@ -28,11 +37,21 @@ class LocalService {
       59,
     ).add(const Duration(days: 3));
 
-    final data = await db.query(
-      "tasks",
-      where: "due_date_time <= ? OR due_date_time IS NULL",
-      whereArgs: [endOfDateRange.toIso8601String()],
-      orderBy: "due_date_time ASC",
+    final data = await db.rawQuery(
+      '''
+      SELECT 
+        tasks.*,
+        tags.id AS tag_id,
+        tags.title AS tag_title,
+        tags.background_hex AS tag_background_hex
+      FROM tasks
+      LEFT JOIN tags ON tasks.tag_id = tags.id
+      WHERE 
+        tasks.due_date_time <= ? 
+        OR tasks.due_date_time IS NULL
+      ORDER BY tasks.due_date_time ASC
+      ''',
+      [endOfDateRange.toIso8601String()],
     );
     return List.generate(data.length, (index) => Task.fromMap(data[index]));
   }

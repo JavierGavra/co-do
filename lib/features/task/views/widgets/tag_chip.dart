@@ -1,3 +1,4 @@
+import 'package:codo/core/utils/color/color_utils.dart';
 import 'package:codo/features/task/models/tag.dart';
 import 'package:flutter/material.dart';
 
@@ -10,14 +11,14 @@ class TagChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Color(int.parse("0xff${tag.backgroundHex}")),
+        color: ColorUtils.fromHex(tag.backgroundHex),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        tag.text,
+        tag.title,
         style: TextStyle(
           fontWeight: FontWeight.w500,
-          color: tag.isBackgroundDark ? Colors.white : Colors.black,
+          color: Colors.white,
           fontSize: 12,
           height: 1.33,
         ),

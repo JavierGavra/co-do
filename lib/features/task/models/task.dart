@@ -26,6 +26,13 @@ class Task {
           : null,
       note: data["note"],
       status: (data['status'] == 1),
+      tag: data['tag_id'] != null
+          ? Tag(
+              id: data['tag_id'],
+              title: data['tag_title'],
+              backgroundHex: data['tag_background_hex'],
+            )
+          : null,
     );
   }
 
@@ -35,6 +42,7 @@ class Task {
       "due_date_time": (dueDate != null) ? dueDate!.toIso8601String() : null,
       "note": note,
       "status": status,
+      "tag_id": tag?.id,
     };
   }
 }

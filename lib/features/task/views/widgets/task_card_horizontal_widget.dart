@@ -156,7 +156,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       child: Text(
-        tag.text,
+        tag.title,
         style: TextStyle(color: Colors.white, fontSize: 11, height: 1.454),
       ),
     );
