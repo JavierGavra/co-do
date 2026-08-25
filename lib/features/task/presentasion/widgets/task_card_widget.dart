@@ -57,7 +57,7 @@ class TaskCardWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () {
-          print("Card");
+          // print("Card");
         },
         onLongPress: () => _onLongPress(context),
         borderRadius: BorderRadius.circular(12),
