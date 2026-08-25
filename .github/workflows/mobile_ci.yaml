@@ -10,6 +10,7 @@ on:
 
 jobs:
     ci:
+        name: Flutter CI
         runs-on: ubuntu-latest
 
         steps:
