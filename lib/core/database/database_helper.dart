@@ -24,6 +24,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_index INTEGER DEFAULT 0,
         title VARCHAR(30) NOT NULL,
         background_hex TEXT NOT NULL
       )

@@ -2,21 +2,19 @@ part of 'menu_bloc.dart';
 
 enum MenuStateStatus { initial, loading, success, failure }
 
-enum MenuStateAction { none, startMenu, reload, createTag }
-
 final class MenuState extends Equatable {
   final MenuStateStatus status;
-  final MenuStateAction action;
+  final bool isMenuStarted;
   final int myDayAmount;
   final int taskAmount;
-  final List<Tag> tags;
+  final List<TagMenuItem> tags;
   final String? errorMessage;
 
   const MenuState({
     required this.status,
+    this.isMenuStarted = false,
     this.myDayAmount = 0,
     this.taskAmount = 0,
-    this.action = MenuStateAction.none,
     this.tags = const [],
     this.errorMessage,
   });
@@ -25,15 +23,15 @@ final class MenuState extends Equatable {
 
   MenuState copyWith({
     MenuStateStatus? status,
-    MenuStateAction? action,
+    bool? isMenuStarted,
     int? myDayAmount,
     int? taskAmount,
-    List<Tag>? tags,
+    List<TagMenuItem>? tags,
     String? errorMessage,
   }) {
     return MenuState(
       status: status ?? this.status,
-      action: action ?? this.action,
+      isMenuStarted: isMenuStarted ?? this.isMenuStarted,
       myDayAmount: myDayAmount ?? this.myDayAmount,
       taskAmount: taskAmount ?? this.taskAmount,
       tags: tags ?? this.tags,
@@ -44,7 +42,7 @@ final class MenuState extends Equatable {
   @override
   List<Object?> get props => [
     status,
-    action,
+    isMenuStarted,
     myDayAmount,
     taskAmount,
     tags,

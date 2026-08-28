@@ -1,6 +1,8 @@
+import 'package:codo/core/bloc/provider.dart';
 import 'package:codo/core/theme/theme.dart';
 import 'package:codo/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:codo/features/menu/presentasion/pages/menu_page.dart';
@@ -20,21 +22,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting('id_ID');
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      themeMode: ThemeMode.system,
-      theme: ThemeData(
-        fontFamily: "Inter",
-        colorScheme: MaterialTheme.lightScheme(),
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: Provider.providers,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Co Do',
+        themeMode: ThemeMode.system,
+        theme: ThemeData(
+          fontFamily: "Inter",
+          colorScheme: MaterialTheme.lightScheme(),
+          useMaterial3: true,
+        ),
+        darkTheme: ThemeData(
+          fontFamily: "Inter",
+          colorScheme: MaterialTheme.darkScheme(),
+          useMaterial3: true,
+        ),
+        home: const MenuPage(),
       ),
-      darkTheme: ThemeData(
-        fontFamily: "Inter",
-        colorScheme: MaterialTheme.darkScheme(),
-        useMaterial3: true,
-      ),
-      home: const MenuPage(),
     );
   }
 }

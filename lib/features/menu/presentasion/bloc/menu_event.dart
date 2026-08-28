@@ -7,15 +7,25 @@ sealed class MenuEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class StartMenuEvent extends MenuEvent {}
+final class MenuStarted extends MenuEvent {}
 
-class ReloadMenuEvent extends MenuEvent {}
+final class MenuReloadRequested extends MenuEvent {}
 
-class CreateTagEvent extends MenuEvent {
-  final Tag tag;
+final class MenuTagCreated extends MenuEvent {
+  final String title;
+  final String backgroundHex;
 
-  const CreateTagEvent(this.tag);
+  const MenuTagCreated({required this.title, required this.backgroundHex});
 
   @override
-  List<Object> get props => [tag];
+  List<Object> get props => [title, backgroundHex];
+}
+
+final class MenuTagsOrderUpdated extends MenuEvent {
+  final List<TagMenuItem> tags;
+
+  const MenuTagsOrderUpdated({required this.tags});
+
+  @override
+  List<Object> get props => [tags];
 }
