@@ -38,25 +38,25 @@ void main() {
   });
 
   group("Task Repository", () {
-    test("postTask()", () async {
-      final response = await repository.postTask(tTask);
+    test("createTask()", () async {
+      final response = await repository.createTask(tTask);
       response.fold((l) => fail(l.toString()), (r) => expect(r, true));
     });
 
     test("getAllTasks()", () async {
-      await repository.postTask(tTask);
+      await repository.createTask(tTask);
       final response = await repository.getAllTasks();
       response.fold((l) => fail(l.toString()), (r) => expect(r, [tTaskModel]));
     });
 
     test("getMyDay()", () async {
-      await repository.postTask(tTask);
+      await repository.createTask(tTask);
       final response = await repository.getMyDay();
       response.fold((l) => fail(l.toString()), (r) => expect(r, [tTaskModel]));
     });
 
     test("deleteTask()", () async {
-      await repository.postTask(tTask);
+      await repository.createTask(tTask);
       final response = await repository.deleteTask(1);
       response.fold((l) => fail(l.toString()), (r) => expect(r, true));
     });

@@ -15,19 +15,19 @@ part 'task_state.dart';
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final GetMyDay _getMyDay;
   final GetAllTasks _getAllTasks;
-  final PostTask _postTask;
+  final CreateTask _createTask;
   final DeleteTask _deleteTask;
   final TaskChecked _taskChecked;
 
   TaskBloc({
     required GetMyDay getMyDay,
     required GetAllTasks getAllTasks,
-    required PostTask postTask,
+    required CreateTask createTask,
     required DeleteTask deleteTask,
     required TaskChecked taskChecked,
   }) : _getMyDay = getMyDay,
        _getAllTasks = getAllTasks,
-       _postTask = postTask,
+       _createTask = createTask,
        _deleteTask = deleteTask,
        _taskChecked = taskChecked,
        super(TaskState.initial()) {
@@ -128,7 +128,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   ) async {
     emit(state.copyWith(action: TaskStateAction.createTask));
     await _handleMutation(
-      call: () => _postTask(PostTaskParams(task: event.task)),
+      call: () => _createTask(CreateTaskParams(task: event.task)),
       emit: emit,
       errorMessage: "Gagal menambahkan tugas",
     );

@@ -44,7 +44,7 @@ void _initTaskFeature() {
     () => TaskBloc(
       getMyDay: sl(),
       getAllTasks: sl(),
-      postTask: sl(),
+      createTask: sl(),
       deleteTask: sl(),
       taskChecked: sl(),
     ),
@@ -53,7 +53,7 @@ void _initTaskFeature() {
   // Usecase
   sl.registerLazySingleton(() => GetMyDay(repository: sl()));
   sl.registerLazySingleton(() => GetAllTasks(repository: sl()));
-  sl.registerLazySingleton(() => PostTask(repository: sl()));
+  sl.registerLazySingleton(() => CreateTask(repository: sl()));
   sl.registerLazySingleton(() => DeleteTask(repository: sl()));
   sl.registerLazySingleton(() => TaskChecked(repository: sl()));
 

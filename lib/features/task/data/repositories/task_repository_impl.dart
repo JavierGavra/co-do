@@ -48,9 +48,11 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> postTask(Task task) async {
+  Future<Either<Failure, bool>> createTask(Task task) async {
     try {
-      return Right(await localDataSource.postTask(TaskModel.fromEntity(task)));
+      return Right(
+        await localDataSource.insertTask(TaskModel.fromEntity(task)),
+      );
     } catch (e) {
       return Left(CacheFailure());
     }
@@ -60,24 +62,6 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<Either<Failure, bool>> taskChecked(int id, bool status) async {
     try {
       return Right(await localDataSource.taskChecked(id, status));
-    } catch (e) {
-      return Left(CacheFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, int>> getMyDayAmmount() async {
-    try {
-      return Right(await localDataSource.getMyDayAmount());
-    } catch (e) {
-      return Left(CacheFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, int>> getTaskAmount() async {
-    try {
-      return Right(await localDataSource.getTaskAmount());
     } catch (e) {
       return Left(CacheFailure());
     }
