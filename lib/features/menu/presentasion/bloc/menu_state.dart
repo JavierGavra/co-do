@@ -9,7 +9,7 @@ final class MenuState extends Equatable {
   final MenuStateAction action;
   final int myDayAmount;
   final int taskAmount;
-  final List<Tag> tags;
+  final List<TagMenuItem> tags;
   final String? errorMessage;
 
   const MenuState({
@@ -28,7 +28,7 @@ final class MenuState extends Equatable {
     MenuStateAction? action,
     int? myDayAmount,
     int? taskAmount,
-    List<Tag>? tags,
+    List<TagMenuItem>? tags,
     String? errorMessage,
   }) {
     return MenuState(

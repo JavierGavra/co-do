@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'package:codo/core/utils/time/time_utils.dart';
-import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
-import 'package:codo/core/widgets/dialog/loading_dialog.dart';
-import '../../../tag/domain/entities/tag.dart';
+import '../../../../core/utils/time/time_utils.dart';
+import '../../../../core/widgets/dialog/loading_dialog.dart';
+import '../../../../core/widgets/snackbar/custom_snackbar.dart';
 import '../../../tag/presentasion/dialogs/create_tags_dialog.dart';
 import '../../../task/presentasion/pages/task_page.dart';
-import '../widgets/menu_button_widget.dart';
+import '../../domain/entities/tag_menu_item.dart';
 import '../bloc/menu_bloc.dart';
+import '../widgets/menu_button_widget.dart';
 
 class MenuView extends StatelessWidget {
   const MenuView({super.key});
@@ -39,7 +39,9 @@ class MenuView extends StatelessWidget {
   void _onCreateTag(BuildContext context) async {
     final tag = await showCreateTagsDialog(context: context);
     if (tag != null && context.mounted) {
-      context.read<MenuBloc>().add(CreateTagEvent(tag));
+      context.read<MenuBloc>().add(
+        CreateTagEvent(title: tag.title, backgroundHex: tag.backgroundHex),
+      );
     }
   }
 
@@ -103,7 +105,7 @@ class MenuView extends StatelessWidget {
                     ],
                   ),
                 ),
-                BlocSelector<MenuBloc, MenuState, List<Tag>>(
+                BlocSelector<MenuBloc, MenuState, List<TagMenuItem>>(
                   selector: (state) => state.tags,
                   builder: (context, state) {
                     return Column(

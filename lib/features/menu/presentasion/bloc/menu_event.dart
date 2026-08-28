@@ -12,10 +12,11 @@ class StartMenuEvent extends MenuEvent {}
 class ReloadMenuEvent extends MenuEvent {}
 
 class CreateTagEvent extends MenuEvent {
-  final Tag tag;
+  final String title;
+  final String backgroundHex;
 
-  const CreateTagEvent(this.tag);
+  const CreateTagEvent({required this.title, required this.backgroundHex});
 
   @override
-  List<Object> get props => [tag];
+  List<Object> get props => [title, backgroundHex];
 }
