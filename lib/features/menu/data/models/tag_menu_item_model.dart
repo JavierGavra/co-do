@@ -9,7 +9,6 @@ class TagMenuItemModel extends TagMenuItem {
   });
 
   factory TagMenuItemModel.fromMap(Map<String, dynamic> map) {
-    print('map: $map');
     return TagMenuItemModel(
       id: map['id'] as int,
       title: map['title'] as String,
