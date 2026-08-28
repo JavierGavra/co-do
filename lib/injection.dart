@@ -8,6 +8,7 @@ import 'features/menu/domain/usecases/create_tag.dart';
 import 'features/menu/domain/usecases/get_my_day_amount.dart';
 import 'features/menu/domain/usecases/get_tag_menu_items.dart';
 import 'features/menu/domain/usecases/get_task_amount.dart';
+import 'features/menu/domain/usecases/update_tags_order.dart';
 import 'features/menu/presentasion/bloc/menu_bloc.dart';
 import 'features/tag/data/datasource/tag_local_data_source.dart';
 import 'features/tag/data/repositories/tag_repository_impl.dart';
@@ -92,6 +93,7 @@ void _initMenuFeature() {
       getTaskAmount: sl(),
       getMyDayAmount: sl(),
       createTag: sl(),
+      updateTagsOrder: sl(),
     ),
   );
 
@@ -100,6 +102,7 @@ void _initMenuFeature() {
   sl.registerLazySingleton(() => GetTaskAmount(sl()));
   sl.registerLazySingleton(() => GetMyDayAmount(sl()));
   sl.registerLazySingleton(() => CreateTag(sl()));
+  sl.registerLazySingleton(() => UpdateTagsOrder(sl()));
 
   // Repository
   sl.registerLazySingleton<MenuRepository>(

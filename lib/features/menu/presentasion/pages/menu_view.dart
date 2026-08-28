@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
@@ -20,7 +22,7 @@ class MenuView extends StatelessWidget {
       curve: Curves.easeInOutCubic,
       child: page,
     );
-    if (context.mounted) context.read<MenuBloc>().add(ReloadMenuEvent());
+    if (context.mounted) context.read<MenuBloc>().add(MenuReloadRequested());
   }
 
   void _listener(BuildContext context, MenuState state) {
@@ -28,7 +30,7 @@ class MenuView extends StatelessWidget {
       showLoadingDialog(context: context);
     } else if (state.status == MenuStateStatus.success) {
       Navigator.of(context).pop();
-      if (state.action == MenuStateAction.startMenu && context.mounted) {
+      if (state.isMenuStarted && context.mounted) {
         _nextPage(context, const TaskPage.myDay());
       }
     } else if (state.status == MenuStateStatus.failure) {
@@ -40,7 +42,7 @@ class MenuView extends StatelessWidget {
     final tag = await showCreateTagsDialog(context: context);
     if (tag != null && context.mounted) {
       context.read<MenuBloc>().add(
-        CreateTagEvent(title: tag.title, backgroundHex: tag.backgroundHex),
+        MenuTagCreated(title: tag.title, backgroundHex: tag.backgroundHex),
       );
     }
   }
@@ -108,10 +110,34 @@ class MenuView extends StatelessWidget {
                 BlocSelector<MenuBloc, MenuState, List<TagMenuItem>>(
                   selector: (state) => state.tags,
                   builder: (context, state) {
-                    return Column(
-                      children: List.generate(state.length, (index) {
+                    return ReorderableListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      proxyDecorator: (child, index, animation) =>
+                          _buildProxyDecorator(
+                            child,
+                            index,
+                            animation,
+                            color.surfaceContainerHigh,
+                          ),
+                      onReorder: (oldIndex, newIndex) {
+                        final updatedTags = List<TagMenuItem>.from(state);
+
+                        final item = updatedTags.removeAt(oldIndex);
+                        updatedTags.insert(
+                          newIndex > oldIndex ? newIndex - 1 : newIndex,
+                          item,
+                        );
+
+                        context.read<MenuBloc>().add(
+                          MenuTagsOrderUpdated(tags: updatedTags),
+                        );
+                      },
+                      itemBuilder: (context, index) {
                         final tag = state[index];
                         return MenuButtonWidget(
+                          key: ValueKey(tag.id),
                           icon: Icons.format_list_bulleted_rounded,
                           iconColor: Color(
                             int.parse('0xFF${tag.backgroundHex}'),
@@ -123,7 +149,7 @@ class MenuView extends StatelessWidget {
                           amount: tag.taskAmount,
                           onTap: () {},
                         );
-                      }),
+                      },
                     );
                   },
                 ),
@@ -170,6 +196,28 @@ class MenuView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Container(color: color.surfaceContainerHighest, height: 2),
+    );
+  }
+
+  Widget _buildProxyDecorator(
+    Widget child,
+    int index,
+    Animation<double> animation,
+    Color draggableItemColor,
+  ) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext context, Widget? child) {
+        final double animValue = Curves.easeInOut.transform(animation.value);
+        final double elevation = lerpDouble(0, 6, animValue)!;
+        return Material(
+          elevation: elevation,
+          color: draggableItemColor,
+          shadowColor: draggableItemColor,
+          child: child,
+        );
+      },
+      child: child,
     );
   }
 }

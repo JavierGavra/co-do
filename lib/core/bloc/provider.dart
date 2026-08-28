@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class Provider {
   static final List<BlocProvider> providers = [
     BlocProvider<MenuBloc>(
-      create: (context) => sl<MenuBloc>()..add(StartMenuEvent()),
+      create: (context) => sl<MenuBloc>()..add(MenuStarted()),
     ),
   ];
 }

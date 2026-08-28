@@ -9,6 +9,7 @@ abstract interface class MenuLocalDatasource {
   Future<int> getMyDayAmount();
   Future<List<TagMenuItemModel>> getTags();
   Future<void> insertTag(String title, String backgroundHex);
+  Future<void> updateTagsOrder(List<TagMenuItemModel> tags);
 }
 
 class MenuLocalDatasourceImpl implements MenuLocalDatasource {
@@ -62,7 +63,8 @@ class MenuLocalDatasourceImpl implements MenuLocalDatasource {
         IFNULL(COUNT(tasks.id), 0) AS task_amount
       FROM tags
       LEFT JOIN tasks ON tags.id = tasks.tag_id
-      GROUP BY tags.id;
+      GROUP BY tags.id
+      ORDER BY tags.order_index ASC;
       ''');
       return data.map((row) => TagMenuItemModel.fromMap(row)).toList();
     } catch (e) {
@@ -74,10 +76,42 @@ class MenuLocalDatasourceImpl implements MenuLocalDatasource {
   @override
   Future<void> insertTag(String title, String backgroundHex) async {
     try {
+      final maxOrderIndex = await database.rawQuery(
+        'SELECT IFNULL(MAX(order_index), -1) as max_index FROM tags',
+      );
+
+      final newOrderIndex = maxOrderIndex.isNotEmpty
+          ? int.parse(maxOrderIndex[0]['max_index'].toString()) + 1
+          : 0;
+
       await database.insert('tags', {
         'title': title,
         'background_hex': backgroundHex,
+        'order_index': newOrderIndex,
       });
+    } catch (e) {
+      debugPrint('$e');
+      throw CacheException();
+    }
+  }
+
+  @override
+  Future<void> updateTagsOrder(List<TagMenuItemModel> newOrderedTags) async {
+    try {
+      final batch = database.batch();
+
+      for (int i = 0; i < newOrderedTags.length; i++) {
+        final tag = newOrderedTags[i];
+
+        batch.update(
+          'tags',
+          {'order_index': i},
+          where: 'id = ?',
+          whereArgs: [tag.id],
+        );
+      }
+
+      await batch.commit(noResult: true);
     } catch (e) {
       debugPrint('$e');
       throw CacheException();
