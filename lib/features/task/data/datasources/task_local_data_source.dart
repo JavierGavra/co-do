@@ -72,8 +72,26 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
   }
 
   @override
-  Future<List<TaskModel>> getTasksByCategory(int id) {
-    throw UnimplementedError();
+  Future<List<TaskModel>> getTasksByCategory(int id) async {
+    try {
+      final data = await database.rawQuery(
+        '''
+        SELECT 
+          tasks.*,
+          tags.id AS tag_id,
+          tags.title AS tag_title,
+          tags.background_hex AS tag_background_hex
+        FROM tasks
+        LEFT JOIN tags ON tasks.tag_id = tags.id
+        WHERE tasks.tag_id = ?
+        ORDER BY tasks.due_date_time ASC
+      ''',
+        [id],
+      );
+      return data.map((x) => TaskModel.fromJson(x)).toList();
+    } catch (e) {
+      throw CacheException();
+    }
   }
 
   @override

@@ -26,7 +26,7 @@ class _TagTasksViewState extends State<TagTasksView> {
   void _listener(BuildContext context, TaskState state) {
     if (state.status == TaskStateStatus.success) {
       if (state.action != TaskStateAction.getTask) {
-        context.read<TaskBloc>().add(GetAllTaskEvent());
+        context.read<TaskBloc>().add(GetAllTaskEvent(tagId: widget.tag.id));
       }
     }
   }

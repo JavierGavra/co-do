@@ -1,5 +1,6 @@
 import 'package:codo/features/tag/domain/usecases/create_tag.dart';
 import 'package:codo/features/tag/presentasion/bloc/create_tag/create_tag_bloc.dart';
+import 'package:codo/features/task/domain/usecases/get_tasks_by_tag.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/database/database_helper.dart';
@@ -45,6 +46,7 @@ void _initTaskFeature() {
     () => TaskBloc(
       getMyDay: sl(),
       getAllTasks: sl(),
+      getTasksByTag: sl(),
       createTask: sl(),
       deleteTask: sl(),
       taskChecked: sl(),
@@ -54,6 +56,7 @@ void _initTaskFeature() {
   // Usecase
   sl.registerLazySingleton(() => GetMyDay(repository: sl()));
   sl.registerLazySingleton(() => GetAllTasks(repository: sl()));
+  sl.registerLazySingleton(() => GetTasksByTag(repository: sl()));
   sl.registerLazySingleton(() => CreateTask(repository: sl()));
   sl.registerLazySingleton(() => DeleteTask(repository: sl()));
   sl.registerLazySingleton(() => TaskChecked(repository: sl()));

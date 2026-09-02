@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:codo/features/task/domain/usecases/get_tasks_by_tag.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:codo/core/usecase/usecase.dart';
@@ -15,6 +16,7 @@ part 'task_state.dart';
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final GetMyDay _getMyDay;
   final GetAllTasks _getAllTasks;
+  final GetTasksByTag _getTasksByTag;
   final CreateTask _createTask;
   final DeleteTask _deleteTask;
   final TaskChecked _taskChecked;
@@ -22,11 +24,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   TaskBloc({
     required GetMyDay getMyDay,
     required GetAllTasks getAllTasks,
+    required GetTasksByTag getTasksByTag,
     required CreateTask createTask,
     required DeleteTask deleteTask,
     required TaskChecked taskChecked,
   }) : _getMyDay = getMyDay,
        _getAllTasks = getAllTasks,
+       _getTasksByTag = getTasksByTag,
        _createTask = createTask,
        _deleteTask = deleteTask,
        _taskChecked = taskChecked,
@@ -119,7 +123,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     Emitter<TaskState> emit,
   ) async {
     emit(state.copyWith(action: TaskStateAction.getTask));
-    await _handleTaskFetch(call: () => _getAllTasks(NoParams()), emit: emit);
+    if (event.tagId != null) {
+      await _handleTaskFetch(
+        call: () => _getTasksByTag(GetTasksByTagParams(id: event.tagId!)),
+        emit: emit,
+      );
+    } else {
+      await _handleTaskFetch(call: () => _getAllTasks(NoParams()), emit: emit);
+    }
   }
 
   Future<void> _onCreateTask(
