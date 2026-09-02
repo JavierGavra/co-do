@@ -13,19 +13,6 @@ class MenuRepositoryImpl implements MenuRepository {
   MenuRepositoryImpl({required this.localDataSource});
 
   @override
-  Future<Either<Failure, void>> createTag(
-    String title,
-    String backgroundHex,
-  ) async {
-    try {
-      await localDataSource.insertTag(title, backgroundHex);
-      return const Right(null);
-    } catch (e) {
-      return Left(CacheFailure());
-    }
-  }
-
-  @override
   Future<Either<Failure, int>> getMyDayAmount() async {
     try {
       final amount = await localDataSource.getMyDayAmount();

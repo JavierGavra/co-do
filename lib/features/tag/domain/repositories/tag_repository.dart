@@ -5,6 +5,6 @@ import '../entities/tag.dart';
 
 abstract interface class TagRepository {
   Future<Either<Failure, List<Tag>>> getTags();
-  Future<Either<Failure, bool>> postTag(Tag tag);
+  Future<Either<Failure, void>> createTag(String title, String backgroundHex);
   Future<Either<Failure, bool>> deleteTag(int id);
 }

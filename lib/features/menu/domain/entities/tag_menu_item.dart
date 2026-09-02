@@ -1,15 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:codo/shared/domain/entities/tag.dart';
 
-class TagMenuItem extends Equatable {
-  final int id;
-  final String title;
-  final String backgroundHex;
+class TagMenuItem extends Tag {
   final int taskAmount;
 
   const TagMenuItem({
-    required this.id,
-    required this.title,
-    required this.backgroundHex,
+    required super.id,
+    required super.title,
+    required super.backgroundHex,
     required this.taskAmount,
   });
 

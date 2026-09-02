@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../domain/entities/tag_menu_item.dart';
-import '../../domain/usecases/create_tag.dart';
 import '../../domain/usecases/get_my_day_amount.dart';
 import '../../domain/usecases/get_tag_menu_items.dart';
 import '../../domain/usecases/get_task_amount.dart';
@@ -18,24 +17,20 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   final GetTagMenuItems _getTagMenuItems;
   final GetTaskAmount _getTaskAmount;
   final GetMyDayAmount _getMyDayAmount;
-  final CreateTag _createTag;
   final UpdateTagsOrder _updateTagsOrder;
 
   MenuBloc({
     required GetTagMenuItems getTagMenuItems,
     required GetTaskAmount getTaskAmount,
     required GetMyDayAmount getMyDayAmount,
-    required CreateTag createTag,
     required UpdateTagsOrder updateTagsOrder,
   }) : _getTagMenuItems = getTagMenuItems,
        _getTaskAmount = getTaskAmount,
        _getMyDayAmount = getMyDayAmount,
-       _createTag = createTag,
        _updateTagsOrder = updateTagsOrder,
        super(MenuState.initial()) {
     on<MenuStarted>(_onMenuStarted);
     on<MenuReloadRequested>(_onMenuReloadRequested);
-    on<MenuTagCreated>(_onMenuTagCreated);
     on<MenuTagsOrderUpdated>(_onMenuTagsOrderUpdated);
   }
 
@@ -93,24 +88,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     MenuReloadRequested event,
     Emitter<MenuState> emit,
   ) async => await _loadMenu(emit);
-
-  Future<void> _onMenuTagCreated(
-    MenuTagCreated event,
-    Emitter<MenuState> emit,
-  ) async {
-    emit(state.copyWith(status: MenuStateStatus.loading));
-
-    final result = await _createTag(
-      CreateTagParams(title: event.title, backgroundHex: event.backgroundHex),
-    );
-
-    if (result.isLeft()) {
-      _emitFailure(result, emit);
-      return;
-    }
-
-    await _loadMenu(emit);
-  }
 
   Future<void> _onMenuTagsOrderUpdated(
     MenuTagsOrderUpdated event,

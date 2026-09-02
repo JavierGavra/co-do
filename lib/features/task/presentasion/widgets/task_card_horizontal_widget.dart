@@ -16,8 +16,15 @@ import './custom_check_box.dart';
 
 class TaskCardHorizontalWidget extends StatelessWidget {
   final Task task;
+  final ColorScheme? colorScheme;
+  final bool showTag;
 
-  const TaskCardHorizontalWidget({super.key, required this.task});
+  const TaskCardHorizontalWidget({
+    super.key,
+    required this.task,
+    this.colorScheme,
+    this.showTag = true,
+  });
 
   Future<void> _onChecked(BuildContext context) async {
     if (!task.status) {
@@ -41,7 +48,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
+    final color = colorScheme ?? Theme.of(context).colorScheme;
     final borderRadius = BorderRadius.circular(4);
 
     final daydifference = (task.dueDate != null)
@@ -101,7 +108,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              if (task.tag != null) _buildTag(task.tag!),
+              if (task.tag != null && showTag) _buildTag(task.tag!),
             ],
           ),
           if (isLessThan3Days && !task.status) _warningMark(color),
@@ -118,10 +125,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
         child: Container(
           height: 24,
           width: 24,
-          decoration: const BoxDecoration(
-            color: Color(0xffE51111),
-            borderRadius: BorderRadius.only(topRight: Radius.circular(12)),
-          ),
+          decoration: BoxDecoration(color: color.error),
         ),
       ),
     );

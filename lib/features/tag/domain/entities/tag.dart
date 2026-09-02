@@ -1,15 +1,14 @@
-import 'package:equatable/equatable.dart';
+import 'package:codo/shared/domain/entities/tag.dart' as shared show Tag;
 
-class Tag extends Equatable {
-  final int? id;
-  final String title;
-  final String backgroundHex;
+typedef BaseTag = shared.Tag;
+
+class Tag extends BaseTag {
   final int taskAmount;
 
   const Tag({
-    this.id,
-    required this.title,
-    required this.backgroundHex,
+    required super.id,
+    required super.title,
+    required super.backgroundHex,
     this.taskAmount = 0,
   });
 
