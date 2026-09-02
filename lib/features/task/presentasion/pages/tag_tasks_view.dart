@@ -68,6 +68,20 @@ class _TagTasksViewState extends State<TagTasksView> {
           controller: _scrollController,
           slivers: [
             _buildSliverAppBar(color, isDark),
+            BlocSelector<TaskBloc, TaskState, bool>(
+              selector: (state) {
+                return state.undoneTasks.isEmpty && state.doneTasks.isEmpty;
+              },
+              builder: (context, state) {
+                return SliverVisibility(
+                  visible: state,
+                  sliver: SliverToBoxAdapter(
+                    child: _buildEmptyListWidget(color, isDark),
+                  ),
+                );
+              },
+            ),
+
             BlocSelector<TaskBloc, TaskState, List<Task>>(
               selector: (state) => state.undoneTasks,
               builder: (context, state) {
@@ -87,22 +101,6 @@ class _TagTasksViewState extends State<TagTasksView> {
                       },
                       separatorBuilder: (context, index) => SizedBox(height: 5),
                     ),
-                    // sliver: SliverMasonryGrid(
-                    //   mainAxisSpacing: 10,
-                    //   crossAxisSpacing: 10,
-                    //   gridDelegate:
-                    //       SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                    //         crossAxisCount: 2,
-                    //       ),
-                    //   delegate: SliverChildBuilderDelegate((context, index) {
-                    //     final task = state[index];
-                    //     return TaskCardWidget(
-                    //       task,
-                    //       colorScheme: color,
-                    //       showTag: false,
-                    //     );
-                    //   }, childCount: state.length),
-                    // ),
                   ),
                 );
               },
@@ -125,26 +123,9 @@ class _TagTasksViewState extends State<TagTasksView> {
                     },
                     separatorBuilder: (context, index) => SizedBox(height: 5),
                   ),
-                  // sliver: SliverMasonryGrid(
-                  //   mainAxisSpacing: 10,
-                  //   crossAxisSpacing: 10,
-                  //   gridDelegate:
-                  //       SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                  //         crossAxisCount: 2,
-                  //       ),
-                  //   delegate: SliverChildBuilderDelegate((context, index) {
-                  //     final Task task = state[index];
-                  //     return TaskCardWidget(
-                  //       task,
-                  //       colorScheme: color,
-                  //       showTag: false,
-                  //     );
-                  //   }, childCount: state.length),
-                  // ),
                 );
               },
             ),
-            SliverToBoxAdapter(child: SizedBox(height: 2000)),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -161,7 +142,6 @@ class _TagTasksViewState extends State<TagTasksView> {
       ),
     );
   }
-  //============================================================================
 
   Widget _buildSliverAppBar(ColorScheme color, bool isDark) {
     return ValueListenableBuilder(
@@ -175,6 +155,7 @@ class _TagTasksViewState extends State<TagTasksView> {
           expandedHeight: _expandedHeight,
           collapsedHeight: _collapsedHeight,
           actions: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.grid_view_outlined)),
             IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded)),
           ],
           title: AnimatedOpacity(
@@ -208,6 +189,48 @@ class _TagTasksViewState extends State<TagTasksView> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyListWidget(ColorScheme color, bool isDark) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(42, 64, 42, 24),
+      padding: EdgeInsets.symmetric(vertical: 84),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 16,
+        children: [
+          Text('🗂️', style: TextStyle(fontSize: 72)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              spacing: 8,
+              children: [
+                Text(
+                  'Belum Ada Tugas',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isDark
+                        ? color.onSecondaryContainer
+                        : color.secondaryContainer,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  'Tambahkan tugas baru dengan menekan tombol +',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: isDark
+                        ? color.onSecondaryContainer
+                        : color.secondaryContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
