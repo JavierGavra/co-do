@@ -1,5 +1,7 @@
 import 'package:codo/features/tag/domain/usecases/create_tag.dart';
+import 'package:codo/features/tag/domain/usecases/delete_tag_with_tasks.dart';
 import 'package:codo/features/tag/presentasion/bloc/create_tag/create_tag_bloc.dart';
+import 'package:codo/features/tag/presentasion/bloc/delete_tag/delete_tag_bloc.dart';
 import 'package:codo/features/task/domain/usecases/get_tasks_by_tag.dart';
 import 'package:get_it/get_it.dart';
 
@@ -15,7 +17,7 @@ import 'features/menu/presentasion/bloc/menu_bloc.dart';
 import 'features/tag/data/datasource/tag_local_data_source.dart';
 import 'features/tag/data/repositories/tag_repository_impl.dart';
 import 'features/tag/domain/repositories/tag_repository.dart';
-import 'features/tag/domain/usecases/delete_tag.dart';
+import 'features/tag/domain/usecases/delete_tag_only.dart';
 import 'features/tag/domain/usecases/get_tags.dart';
 import 'features/tag/presentasion/cubit/tag_cubit.dart';
 import 'features/task/data/datasources/task_local_data_source.dart';
@@ -75,11 +77,15 @@ void _initTaskFeature() {
 void _initTagFeature() {
   sl.registerFactory(() => TagCubit(getTags: sl()));
   sl.registerFactory(() => CreateTagBloc(createTag: sl()));
+  sl.registerFactory(
+    () => DeleteTagBloc(deleteTagOnly: sl(), deleteTagWithTasks: sl()),
+  );
 
   // Usecase
-  sl.registerLazySingleton(() => CreateTag(sl()));
-  sl.registerLazySingleton(() => DeleteTag(repository: sl()));
   sl.registerLazySingleton(() => GetTags(repository: sl()));
+  sl.registerLazySingleton(() => CreateTag(sl()));
+  sl.registerLazySingleton(() => DeleteTagOnly(repository: sl()));
+  sl.registerLazySingleton(() => DeleteTagWithTasks(sl()));
 
   // Repository
   sl.registerLazySingleton<TagRepository>(

@@ -1,10 +1,15 @@
-import 'package:codo/features/task/domain/entities/task.dart';
-import 'package:codo/features/task/presentasion/bloc/task_bloc.dart';
-import 'package:codo/features/task/presentasion/widgets/add_task_bottom_sheet.dart';
-import 'package:codo/features/task/presentasion/widgets/task_card_horizontal_widget.dart';
-import 'package:codo/shared/domain/entities/tag.dart';
+import 'package:codo/features/task/presentasion/widgets/task_app_bar_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../shared/domain/entities/tag.dart';
+import '../../../tag/presentasion/dialogs/delete_tag_dialog.dart';
+import '../../domain/entities/task.dart';
+import '../bloc/task_bloc.dart';
+import '../../../../core/utils/color/color_utils.dart';
+import '../widgets/add_task_bottom_sheet.dart';
+import '../widgets/empty_list_widget.dart';
+import '../widgets/task_card_horizontal_widget.dart';
 
 class TagTasksView extends StatefulWidget {
   final Tag tag;
@@ -16,7 +21,6 @@ class TagTasksView extends StatefulWidget {
 }
 
 class _TagTasksViewState extends State<TagTasksView> {
-  late final Color seedColor;
   final double _collapsedHeight = 56;
   final double _expandedHeight = 146;
 
@@ -31,10 +35,19 @@ class _TagTasksViewState extends State<TagTasksView> {
     }
   }
 
+  void _onTagDelete(BuildContext context) async {
+    await showDeleteTagDialog(context: context, tagId: widget.tag.id).then((
+      isTagDeleted,
+    ) {
+      if (isTagDeleted == true && context.mounted) {
+        Navigator.pop(context);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    seedColor = Color(int.parse('0xFF${widget.tag.backgroundHex}'));
     _scrollController = ScrollController()
       ..addListener(() {
         _isCollapsed.value =
@@ -57,7 +70,7 @@ class _TagTasksViewState extends State<TagTasksView> {
       contrastLevel: isDark ? 0 : -0.1,
       dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
       brightness: Theme.brightnessOf(context),
-      seedColor: seedColor,
+      seedColor: ColorUtils.fromHex(widget.tag.backgroundHex),
     );
 
     return BlocListener<TaskBloc, TaskState>(
@@ -76,7 +89,7 @@ class _TagTasksViewState extends State<TagTasksView> {
                 return SliverVisibility(
                   visible: state,
                   sliver: SliverToBoxAdapter(
-                    child: _buildEmptyListWidget(color, isDark),
+                    child: EmptyListWidget(colorScheme: color),
                   ),
                 );
               },
@@ -155,8 +168,23 @@ class _TagTasksViewState extends State<TagTasksView> {
           expandedHeight: _expandedHeight,
           collapsedHeight: _collapsedHeight,
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.grid_view_outlined)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded)),
+            // IconButton(onPressed: () {}, icon: Icon(Icons.grid_view_outlined)),
+            TaskAppBarMenu(
+              colorScheme: color,
+              items: [
+                TaskAppBarMenuItem(
+                  onTap: () {},
+                  icon: Icons.edit_outlined,
+                  label: 'Ganti nama kategori',
+                ),
+                TaskAppBarMenuItem(
+                  onTap: () => _onTagDelete(context),
+                  icon: Icons.delete_forever_outlined,
+                  label: 'Hapus kategori',
+                  color: color.error,
+                ),
+              ],
+            ),
           ],
           title: AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
@@ -189,48 +217,6 @@ class _TagTasksViewState extends State<TagTasksView> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildEmptyListWidget(ColorScheme color, bool isDark) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(42, 64, 42, 24),
-      padding: EdgeInsets.symmetric(vertical: 84),
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 16,
-        children: [
-          Text('🗂️', style: TextStyle(fontSize: 72)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              spacing: 8,
-              children: [
-                Text(
-                  'Belum Ada Tugas',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: isDark
-                        ? color.onSecondaryContainer
-                        : color.secondaryContainer,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  'Tambahkan tugas baru dengan menekan tombol +',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: isDark
-                        ? color.onSecondaryContainer
-                        : color.secondaryContainer,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

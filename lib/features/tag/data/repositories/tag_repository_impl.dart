@@ -11,15 +11,6 @@ class TagRepositoryImpl implements TagRepository {
   const TagRepositoryImpl({required this.localDataSource});
 
   @override
-  Future<Either<Failure, bool>> deleteTag(int id) async {
-    try {
-      return Right(await localDataSource.deleteTag(id));
-    } catch (e) {
-      return Left(CacheFailure());
-    }
-  }
-
-  @override
   Future<Either<Failure, List<Tag>>> getTags() async {
     try {
       return Right(await localDataSource.getTags());
@@ -35,6 +26,36 @@ class TagRepositoryImpl implements TagRepository {
   ) async {
     try {
       return Right(await localDataSource.insertTag(title, backgroundHex));
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteTagOnly(int id) async {
+    try {
+      await localDataSource.deleteTagOnly(id);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteTagWithTasks(int id) async {
+    try {
+      await localDataSource.deleteTagWithTasks(id);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> renameTag(int id, String newTitle) async {
+    try {
+      await localDataSource.renameTag(id, newTitle);
+      return const Right(null);
     } catch (e) {
       return Left(CacheFailure());
     }
