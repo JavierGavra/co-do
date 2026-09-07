@@ -1,3 +1,4 @@
+import 'package:codo/features/tag/presentasion/dialogs/rename_tag_dialog.dart';
 import 'package:codo/features/task/presentasion/widgets/task_app_bar_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,9 @@ class _TagTasksViewState extends State<TagTasksView> {
   final double _collapsedHeight = 56;
   final double _expandedHeight = 146;
 
+  // Temporary save biar title nya keubah kalau renameTag()
+  late String _title;
+
   late ScrollController _scrollController;
   final ValueNotifier<bool> _isCollapsed = ValueNotifier(false);
 
@@ -33,6 +37,18 @@ class _TagTasksViewState extends State<TagTasksView> {
         context.read<TaskBloc>().add(GetAllTaskEvent(tagId: widget.tag.id));
       }
     }
+  }
+
+  void _onTagRename(BuildContext context) async {
+    await showRenameTagDialog(
+      context: context,
+      tagId: widget.tag.id,
+      currentTitle: widget.tag.title,
+    ).then((newTitle) {
+      if (newTitle != null && context.mounted) {
+        setState(() => _title = newTitle);
+      }
+    });
   }
 
   void _onTagDelete(BuildContext context) async {
@@ -48,6 +64,7 @@ class _TagTasksViewState extends State<TagTasksView> {
   @override
   void initState() {
     super.initState();
+    _title = widget.tag.title;
     _scrollController = ScrollController()
       ..addListener(() {
         _isCollapsed.value =
@@ -173,7 +190,7 @@ class _TagTasksViewState extends State<TagTasksView> {
               colorScheme: color,
               items: [
                 TaskAppBarMenuItem(
-                  onTap: () {},
+                  onTap: () => _onTagRename(context),
                   icon: Icons.edit_outlined,
                   label: 'Ganti nama kategori',
                 ),
@@ -190,7 +207,7 @@ class _TagTasksViewState extends State<TagTasksView> {
             duration: const Duration(milliseconds: 200),
             opacity: value ? 1 : 0,
             child: Text(
-              widget.tag.title,
+              _title,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -205,7 +222,7 @@ class _TagTasksViewState extends State<TagTasksView> {
               alignment: Alignment.bottomLeft,
               padding: EdgeInsets.only(left: 16),
               child: Text(
-                widget.tag.title,
+                _title,
                 style: TextStyle(
                   fontSize: 32,
                   height: 1.5,

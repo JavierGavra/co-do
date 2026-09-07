@@ -48,6 +48,12 @@ class _DeleteTagDialogState extends State<_DeleteTagDialog> {
   }
 
   @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     return BlocListener<DeleteTagBloc, DeleteTagState>(

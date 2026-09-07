@@ -1,7 +1,9 @@
 import 'package:codo/features/tag/domain/usecases/create_tag.dart';
 import 'package:codo/features/tag/domain/usecases/delete_tag_with_tasks.dart';
+import 'package:codo/features/tag/domain/usecases/rename_tag.dart';
 import 'package:codo/features/tag/presentasion/bloc/create_tag/create_tag_bloc.dart';
 import 'package:codo/features/tag/presentasion/bloc/delete_tag/delete_tag_bloc.dart';
+import 'package:codo/features/tag/presentasion/bloc/rename_tag/rename_tag_bloc.dart';
 import 'package:codo/features/task/domain/usecases/get_tasks_by_tag.dart';
 import 'package:get_it/get_it.dart';
 
@@ -80,12 +82,14 @@ void _initTagFeature() {
   sl.registerFactory(
     () => DeleteTagBloc(deleteTagOnly: sl(), deleteTagWithTasks: sl()),
   );
+  sl.registerFactory(() => RenameTagBloc(renameTag: sl()));
 
   // Usecase
   sl.registerLazySingleton(() => GetTags(repository: sl()));
   sl.registerLazySingleton(() => CreateTag(sl()));
   sl.registerLazySingleton(() => DeleteTagOnly(repository: sl()));
   sl.registerLazySingleton(() => DeleteTagWithTasks(sl()));
+  sl.registerLazySingleton(() => RenameTag(sl()));
 
   // Repository
   sl.registerLazySingleton<TagRepository>(
