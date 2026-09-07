@@ -1,16 +1,29 @@
+import 'package:codo/features/task/presentasion/widgets/chip/task_additional_chip.dart';
+import 'package:codo/features/task/presentasion/widgets/input/task_due_field.dart';
+import 'package:codo/features/task/presentasion/widgets/input/task_note_field.dart';
+import 'package:codo/features/task/presentasion/widgets/input/title_field.dart';
+import 'package:codo/shared/domain/entities/tag.dart';
 import 'package:flutter/material.dart';
 
 import 'package:codo/core/utils/color/color_utils.dart';
-import '../../../tag/domain/entities/tag.dart';
-import '../../../tag/presentasion/dialogs/select_tag_dialog.dart';
-import '../../domain/entities/task.dart';
-import './due_date_field.dart';
-import './due_time_field.dart';
+import '../../../../tag/presentasion/dialogs/select_tag_dialog.dart';
+import '../../../domain/entities/task.dart';
 
-enum AdditionalField { note, dueDate, tag }
+Future<Task?> showAddTaskBottomSheet(BuildContext context, {Tag? initialTag}) {
+  return showModalBottomSheet<Task>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (BuildContext context) {
+      return AddTaskBottomSheet(initialTag: initialTag);
+    },
+  );
+}
 
 class AddTaskBottomSheet extends StatefulWidget {
-  const AddTaskBottomSheet({super.key});
+  final Tag? initialTag;
+
+  const AddTaskBottomSheet({super.key, this.initialTag});
 
   @override
   State<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
@@ -37,9 +50,27 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     }
   }
 
+  void _onAdditionalFieldPressed(AdditionalField fieldType) {
+    if (fieldType == AdditionalField.dueDate) {
+      _dueDate = DateTime.now().copyWith(hour: 23, minute: 59, second: 0);
+    }
+    setState(() => _visibleFields.add(fieldType));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.initialTag != null) {
+      _tag.value = widget.initialTag;
+      _visibleFields.add(AdditionalField.tag);
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
+    _tag.dispose();
     super.dispose();
   }
 
@@ -65,7 +96,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
               SizedBox(height: 16),
 
               // Titlw
-              _titleField(color),
+              TitleField(
+                key: ValueKey("title"),
+                titleController: _titleController,
+              ),
 
               // Note
               if (_visibleFields.contains(AdditionalField.note))
@@ -129,81 +163,31 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     );
   }
 
-  Widget _titleField(ColorScheme color) {
-    return TextFormField(
-      key: ValueKey("title"),
-      autofocus: true,
-      controller: _titleController,
-      textInputAction: TextInputAction.next,
-      decoration: InputDecoration(
-        hint: Text(
-          "Judul",
-          style: TextStyle(
-            color: color.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-        ),
-        border: OutlineInputBorder(),
-        visualDensity: VisualDensity.comfortable,
-      ),
-      validator: (value) {
-        return (value == null || value.isEmpty) ? "Wajib di isi" : null;
-      },
-    );
-  }
-
   Widget _dueDateSection() {
     return Padding(
       key: ValueKey('dueDate'),
       padding: EdgeInsets.only(top: 10),
-      child: Row(
-        spacing: 10,
-        children: [
-          Expanded(
-            flex: 3,
-            child: DueDateField(
-              initialDate: _dueDate!,
-              onChanged: (value) => _dueDate = _dueDate!.copyWith(
-                year: value.year,
-                month: value.month,
-                day: value.day,
-              ),
-            ),
-          ),
-          Expanded(
-            child: DueTimeField(
-              initialTime: TimeOfDay.fromDateTime(_dueDate!),
-              onChanged: (value) => _dueDate = _dueDate!.copyWith(
-                hour: value.hour,
-                minute: value.minute,
-                second: 0,
-              ),
-            ),
-          ),
-        ],
+      child: TaskDueField(
+        initialDate: _dueDate!,
+        onDueChanged: (value) {
+          _dueDate = _dueDate!.copyWith(
+            year: value.year,
+            month: value.month,
+            day: value.day,
+            hour: value.hour,
+            minute: value.minute,
+            second: 0,
+          );
+        },
       ),
     );
   }
 
   Widget _noteSection(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return Padding(
       key: ValueKey('note'),
       padding: EdgeInsets.only(top: 15),
-      child: TextField(
-        onChanged: (value) => _note = value,
-        textInputAction: TextInputAction.newline,
-        maxLines: null,
-        style: const TextStyle(fontSize: 13, height: 1.53),
-        decoration: InputDecoration(
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          border: OutlineInputBorder(),
-          labelText: "Catatan",
-          hintText: "Catatan...",
-          hintStyle: TextStyle(
-            color: color.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-        ),
-      ),
+      child: TaskNoteField(onChanged: (value) => _note = value),
     );
   }
 
@@ -243,13 +227,11 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                     onPressed: () async {
                       final data = await showSelectTagDialog(context: context);
                       if (data != null) {
-                        setState(() {
-                          _tag.value = Tag(
-                            id: data.id,
-                            title: data.title,
-                            backgroundHex: data.backgroundHex,
-                          );
-                        });
+                        _tag.value = Tag(
+                          id: data.id,
+                          title: data.title,
+                          backgroundHex: data.backgroundHex,
+                        );
                       }
                     },
                     visualDensity: VisualDensity.compact,
@@ -269,61 +251,30 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       spacing: 8,
       children: [
         if (!_visibleFields.contains(AdditionalField.note))
-          _additionalChip(
+          TaskAdditionalChip(
             label: "Catatan",
             icon: Icons.edit,
             color: color.tertiary,
             fieldType: AdditionalField.note,
+            onPressed: _onAdditionalFieldPressed,
           ),
         if (!_visibleFields.contains(AdditionalField.dueDate))
-          _additionalChip(
+          TaskAdditionalChip(
             label: "Jatuh Tempo",
             icon: Icons.calendar_month_outlined,
             color: color.error,
             fieldType: AdditionalField.dueDate,
+            onPressed: _onAdditionalFieldPressed,
           ),
         if (!_visibleFields.contains(AdditionalField.tag))
-          _additionalChip(
+          TaskAdditionalChip(
             label: "Kategori",
             icon: Icons.category_outlined,
             color: color.secondary,
             fieldType: AdditionalField.tag,
+            onPressed: _onAdditionalFieldPressed,
           ),
       ],
     );
   }
-
-  Widget _additionalChip({
-    required AdditionalField fieldType,
-    required String label,
-    required IconData icon,
-    required Color color,
-  }) {
-    final backgroundColor = Theme.of(context).colorScheme.surfaceContainer;
-    return ActionChip(
-      onPressed: () {
-        if (fieldType == AdditionalField.dueDate) {
-          _dueDate = DateTime.now().copyWith(hour: 23, minute: 59, second: 0);
-        }
-        setState(() => _visibleFields.add(fieldType));
-      },
-      label: Text(label),
-      side: BorderSide(color: color),
-      backgroundColor: backgroundColor,
-      avatar: Icon(icon, color: color),
-      labelStyle: TextStyle(color: color),
-      visualDensity: VisualDensity.comfortable,
-    );
-  }
-}
-
-Future<Task?> showAddTaskBottomSheet(BuildContext context) {
-  return showModalBottomSheet<Task>(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (BuildContext context) {
-      return AddTaskBottomSheet();
-    },
-  );
 }

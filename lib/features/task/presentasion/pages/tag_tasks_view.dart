@@ -1,16 +1,16 @@
-import 'package:codo/features/tag/presentasion/dialogs/rename_tag_dialog.dart';
-import 'package:codo/features/task/presentasion/widgets/task_app_bar_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/color/color_utils.dart';
 import '../../../../shared/domain/entities/tag.dart';
 import '../../../tag/presentasion/dialogs/delete_tag_dialog.dart';
+import '../../../tag/presentasion/dialogs/rename_tag_dialog.dart';
 import '../../domain/entities/task.dart';
 import '../bloc/task_bloc.dart';
-import '../../../../core/utils/color/color_utils.dart';
-import '../widgets/add_task_bottom_sheet.dart';
+import '../widgets/bottom_sheets/add_task_bottom_sheet.dart';
+import '../widgets/card/task_horizontal_card.dart';
 import '../widgets/empty_list_widget.dart';
-import '../widgets/task_card_horizontal_widget.dart';
+import '../widgets/menu/task_app_bar_menu.dart';
 
 class TagTasksView extends StatefulWidget {
   final Tag tag;
@@ -123,7 +123,7 @@ class _TagTasksViewState extends State<TagTasksView> {
                       itemCount: state.length,
                       itemBuilder: (context, index) {
                         final task = state[index];
-                        return TaskCardHorizontalWidget(
+                        return TaskHorizontalCard(
                           task: task,
                           colorScheme: color,
                           showTag: false,
@@ -145,7 +145,7 @@ class _TagTasksViewState extends State<TagTasksView> {
                     itemCount: state.length,
                     itemBuilder: (context, index) {
                       final task = state[index];
-                      return TaskCardHorizontalWidget(
+                      return TaskHorizontalCard(
                         task: task,
                         colorScheme: color,
                         showTag: false,
@@ -160,7 +160,10 @@ class _TagTasksViewState extends State<TagTasksView> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final task = await showAddTaskBottomSheet(context);
+            final task = await showAddTaskBottomSheet(
+              context,
+              initialTag: widget.tag,
+            );
             if (task != null && context.mounted) {
               context.read<TaskBloc>().add(CreateTaskEvent(task: task));
             }

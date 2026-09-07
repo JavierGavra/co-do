@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/task.dart';
 import '../bloc/task_bloc.dart';
-import '../widgets/add_task_bottom_sheet.dart';
-import '../widgets/task_card_horizontal_widget.dart';
+import '../widgets/bottom_sheets/add_task_bottom_sheet.dart';
+import '../widgets/card/task_horizontal_card.dart';
 
 class AllTaskView extends StatefulWidget {
   const AllTaskView({super.key});
@@ -70,7 +70,7 @@ class _AllTaskViewState extends State<AllTaskView> {
                       itemCount: state.length,
                       itemBuilder: (context, index) {
                         final task = state[index];
-                        return TaskCardHorizontalWidget(task: task);
+                        return TaskHorizontalCard(task: task);
                       },
                       separatorBuilder: (context, index) => SizedBox(height: 5),
                     ),
@@ -88,7 +88,7 @@ class _AllTaskViewState extends State<AllTaskView> {
                     itemCount: state.length,
                     itemBuilder: (context, index) {
                       final task = state[index];
-                      return TaskCardHorizontalWidget(task: task);
+                      return TaskHorizontalCard(task: task);
                     },
                     separatorBuilder: (context, index) => SizedBox(height: 5),
                   ),

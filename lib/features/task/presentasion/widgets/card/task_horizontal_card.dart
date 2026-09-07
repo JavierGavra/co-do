@@ -1,25 +1,25 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:codo/core/utils/color/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'package:codo/core/constant/audio_assets.dart';
-import 'package:codo/core/utils/clipper/diagonal_clipper.dart';
-import 'package:codo/core/widgets/dialog/delete_dialog.dart';
-import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
-import '../../../tag/domain/entities/tag.dart';
-import '../../domain/entities/task.dart';
-import '../bloc/task_bloc.dart';
-import './custom_check_box.dart';
+import '../../../../../core/constant/audio_assets.dart';
+import '../../../../../core/utils/clipper/diagonal_clipper.dart';
+import '../../../../../core/utils/color/color_utils.dart';
+import '../../../../../core/widgets/dialog/delete_dialog.dart';
+import '../../../../../core/widgets/snackbar/custom_snackbar.dart';
+import '../../../../../shared/domain/entities/tag.dart';
+import '../../../domain/entities/task.dart';
+import '../../bloc/task_bloc.dart';
+import '../input/custom_check_box.dart';
 
-class TaskCardHorizontalWidget extends StatelessWidget {
+class TaskHorizontalCard extends StatelessWidget {
   final Task task;
   final ColorScheme? colorScheme;
   final bool showTag;
 
-  const TaskCardHorizontalWidget({
+  const TaskHorizontalCard({
     super.key,
     required this.task,
     this.colorScheme,

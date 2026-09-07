@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:codo/core/utils/color/color_utils.dart';
-import '../../domain/entities/tag.dart';
+import '../../../../core/utils/color/color_utils.dart';
+import '../../../../shared/domain/entities/tag.dart';
 
 class TagChip extends StatelessWidget {
   const TagChip(this.tag, {super.key});

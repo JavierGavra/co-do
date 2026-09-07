@@ -6,8 +6,8 @@ import 'package:codo/core/constant/image_assets.dart';
 import 'package:codo/core/utils/time/time_utils.dart';
 import '../../domain/entities/task.dart';
 import '../bloc/task_bloc.dart';
-import '../widgets/add_task_bottom_sheet.dart';
-import '../widgets/task_card_widget.dart';
+import '../widgets/bottom_sheets/add_task_bottom_sheet.dart';
+import '../widgets/card/task_card.dart';
 
 class MyDayView extends StatefulWidget {
   const MyDayView({super.key});
@@ -88,7 +88,7 @@ class _MyDayViewState extends State<MyDayView> {
                             index,
                           ) {
                             final Task model = state[index];
-                            return TaskCardWidget(model);
+                            return TaskCard(model);
                           }, childCount: state.length),
                         ),
                       ),
@@ -111,7 +111,7 @@ class _MyDayViewState extends State<MyDayView> {
                             ),
                         delegate: SliverChildBuilderDelegate((context, index) {
                           final Task model = state[index];
-                          return TaskCardWidget(model);
+                          return TaskCard(model);
                         }, childCount: state.length),
                       ),
                     );

@@ -8,13 +8,13 @@ import 'package:codo/core/constant/audio_assets.dart';
 import 'package:codo/core/utils/clipper/diagonal_clipper.dart';
 import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
 import 'package:codo/core/widgets/dialog/delete_dialog.dart';
-import '../../../tag/presentasion/widgets/tag_chip.dart';
-import '../../domain/entities/task.dart';
-import '../bloc/task_bloc.dart';
-import 'custom_check_box.dart';
+import '../../../../tag/presentasion/widgets/tag_chip.dart';
+import '../../../domain/entities/task.dart';
+import '../../bloc/task_bloc.dart';
+import '../input/custom_check_box.dart';
 
-class TaskCardWidget extends StatelessWidget {
-  const TaskCardWidget(this.task, {super.key});
+class TaskCard extends StatelessWidget {
+  const TaskCard(this.task, {super.key});
   final Task task;
 
   Future<void> _onChecked(BuildContext context) async {
