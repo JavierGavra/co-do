@@ -1,10 +1,10 @@
-import 'package:codo/features/task/data/models/task_model.dart';
 import 'package:dartz/dartz.dart' hide Task;
 
-import 'package:codo/core/error/failures.dart';
-import '../../domain/repositories/task_repository.dart';
+import '../../../../core/error/failures.dart';
 import '../../domain/entities/task.dart';
+import '../../domain/repositories/task_repository.dart';
 import '../datasources/task_local_data_source.dart';
+import '../models/task_model.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final TaskLocalDataSource localDataSource;

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart' hide Task;
 import 'package:equatable/equatable.dart';
 
-import 'package:codo/core/error/failures.dart';
-import 'package:codo/core/usecase/usecase.dart';
+import '../../../../core/error/failures.dart';
+import '../../../../core/usecase/usecase.dart';
 import '../repositories/task_repository.dart';
 
 class TaskChecked implements UseCase<bool, TaskCheckedParams> {

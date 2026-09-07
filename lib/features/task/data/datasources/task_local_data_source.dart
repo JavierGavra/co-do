@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import 'package:codo/core/error/exceptions.dart';
+import '../../../../core/error/exceptions.dart';
 import '../models/task_model.dart';
 
 abstract interface class TaskLocalDataSource {

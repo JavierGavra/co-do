@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
-import 'package:codo/features/task/domain/usecases/get_tasks_by_tag.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:codo/core/usecase/usecase.dart';
+import '../../../../core/usecase/usecase.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/usecases/delete_task.dart';
 import '../../domain/usecases/get_all_tasks.dart';
 import '../../domain/usecases/get_my_day.dart';
+import '../../domain/usecases/get_tasks_by_tag.dart';
 import '../../domain/usecases/post_task.dart';
 import '../../domain/usecases/task_checked.dart';
 

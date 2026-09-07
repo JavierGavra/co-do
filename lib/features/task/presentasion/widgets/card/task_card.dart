@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'package:codo/core/constant/audio_assets.dart';
-import 'package:codo/core/utils/clipper/diagonal_clipper.dart';
-import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
-import 'package:codo/core/widgets/dialog/delete_dialog.dart';
+import '../../../../../core/constant/audio_assets.dart';
+import '../../../../../core/utils/clipper/diagonal_clipper.dart';
+import '../../../../../core/widgets/dialog/delete_dialog.dart';
+import '../../../../../core/widgets/snackbar/custom_snackbar.dart';
 import '../../../../tag/presentasion/widgets/tag_chip.dart';
 import '../../../domain/entities/task.dart';
 import '../../bloc/task_bloc.dart';

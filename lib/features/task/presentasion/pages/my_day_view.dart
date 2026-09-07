@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import 'package:codo/core/constant/image_assets.dart';
-import 'package:codo/core/utils/time/time_utils.dart';
+import '../../../../core/constant/image_assets.dart';
+import '../../../../core/utils/time/time_utils.dart';
 import '../../domain/entities/task.dart';
 import '../bloc/task_bloc.dart';
 import '../widgets/bottom_sheets/add_task_bottom_sheet.dart';

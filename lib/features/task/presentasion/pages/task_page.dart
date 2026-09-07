@@ -1,11 +1,11 @@
-import 'package:codo/injection.dart';
-import 'package:codo/shared/domain/entities/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../injection.dart';
+import '../../../../shared/domain/entities/tag.dart';
 import '../bloc/task_bloc.dart';
-import 'my_day_view.dart';
 import 'all_task_view.dart';
+import 'my_day_view.dart';
 import 'tag_tasks_view.dart';
 
 enum TaskPageType { myDay, all, byTag }
