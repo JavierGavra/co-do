@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
 class CustomCheckBox extends StatelessWidget {
-  const CustomCheckBox({super.key, required this.onTap, required this.value});
+  const CustomCheckBox({
+    super.key,
+    required this.onTap,
+    required this.value,
+    this.colorScheme,
+  });
 
   final VoidCallback onTap;
+  final ColorScheme? colorScheme;
   final bool value;
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
+    final color = colorScheme ?? Theme.of(context).colorScheme;
 
     return InkWell(
       onTap: onTap,

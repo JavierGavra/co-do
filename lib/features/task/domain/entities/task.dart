@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../tag/domain/entities/tag.dart';
+import '../../../../shared/domain/entities/tag.dart';
 
 class Task extends Equatable {
   final int? id;

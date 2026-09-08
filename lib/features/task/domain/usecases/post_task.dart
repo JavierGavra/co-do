@@ -1,26 +1,26 @@
 import 'package:dartz/dartz.dart' hide Task;
 import 'package:equatable/equatable.dart';
 
-import 'package:codo/core/error/failures.dart';
-import 'package:codo/core/usecase/usecase.dart';
+import '../../../../core/error/failures.dart';
+import '../../../../core/usecase/usecase.dart';
 import '../entities/task.dart';
 import '../repositories/task_repository.dart';
 
-class PostTask implements UseCase<bool, PostTaskParams> {
+class CreateTask implements UseCase<bool, CreateTaskParams> {
   final TaskRepository repository;
 
-  const PostTask({required this.repository});
+  const CreateTask({required this.repository});
 
   @override
-  Future<Either<Failure, bool>> call(PostTaskParams params) {
-    return repository.postTask(params.task);
+  Future<Either<Failure, bool>> call(CreateTaskParams params) {
+    return repository.createTask(params.task);
   }
 }
 
-class PostTaskParams extends Equatable {
+class CreateTaskParams extends Equatable {
   final Task task;
 
-  const PostTaskParams({required this.task});
+  const CreateTaskParams({required this.task});
 
   @override
   List<Object> get props => [task];

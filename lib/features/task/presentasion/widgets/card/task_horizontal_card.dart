@@ -1,23 +1,30 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:codo/core/utils/color/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'package:codo/core/constant/audio_assets.dart';
-import 'package:codo/core/utils/clipper/diagonal_clipper.dart';
-import 'package:codo/core/widgets/dialog/delete_dialog.dart';
-import 'package:codo/core/widgets/snackbar/custom_snackbar.dart';
-import '../../../tag/domain/entities/tag.dart';
-import '../../domain/entities/task.dart';
-import '../bloc/task_bloc.dart';
-import './custom_check_box.dart';
+import '../../../../../core/constant/audio_assets.dart';
+import '../../../../../core/utils/clipper/diagonal_clipper.dart';
+import '../../../../../core/utils/color/color_utils.dart';
+import '../../../../../core/widgets/dialog/delete_dialog.dart';
+import '../../../../../core/widgets/snackbar/custom_snackbar.dart';
+import '../../../../../shared/domain/entities/tag.dart';
+import '../../../domain/entities/task.dart';
+import '../../bloc/task_bloc.dart';
+import '../input/custom_check_box.dart';
 
-class TaskCardHorizontalWidget extends StatelessWidget {
+class TaskHorizontalCard extends StatelessWidget {
   final Task task;
+  final ColorScheme? colorScheme;
+  final bool showTag;
 
-  const TaskCardHorizontalWidget({super.key, required this.task});
+  const TaskHorizontalCard({
+    super.key,
+    required this.task,
+    this.colorScheme,
+    this.showTag = true,
+  });
 
   Future<void> _onChecked(BuildContext context) async {
     if (!task.status) {
@@ -41,7 +48,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
+    final color = colorScheme ?? Theme.of(context).colorScheme;
     final borderRadius = BorderRadius.circular(4);
 
     final daydifference = (task.dueDate != null)
@@ -80,6 +87,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           child: CustomCheckBox(
                             value: task.status,
+                            colorScheme: colorScheme,
                             onTap: () => _onChecked(context),
                           ),
                         ),
@@ -101,7 +109,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              if (task.tag != null) _buildTag(task.tag!),
+              if (task.tag != null && showTag) _buildTag(task.tag!),
             ],
           ),
           if (isLessThan3Days && !task.status) _warningMark(color),
@@ -118,10 +126,7 @@ class TaskCardHorizontalWidget extends StatelessWidget {
         child: Container(
           height: 24,
           width: 24,
-          decoration: const BoxDecoration(
-            color: Color(0xffE51111),
-            borderRadius: BorderRadius.only(topRight: Radius.circular(12)),
-          ),
+          decoration: BoxDecoration(color: color.error),
         ),
       ),
     );

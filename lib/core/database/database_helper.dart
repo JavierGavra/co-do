@@ -38,7 +38,7 @@ class DatabaseHelper {
         note TEXT,
         status BOOLEAN DEFAULT FALSE,
         tag_id INTEGER,
-        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE SET NULL
       )
     ''');
   }

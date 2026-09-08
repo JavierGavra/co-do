@@ -39,11 +39,9 @@ class MenuView extends StatelessWidget {
   }
 
   void _onCreateTag(BuildContext context) async {
-    final tag = await showCreateTagsDialog(context: context);
-    if (tag != null && context.mounted) {
-      context.read<MenuBloc>().add(
-        MenuTagCreated(title: tag.title, backgroundHex: tag.backgroundHex),
-      );
+    final result = await showCreateTagsDialog(context: context);
+    if (result == true && context.mounted) {
+      context.read<MenuBloc>().add(MenuReloadRequested());
     }
   }
 
@@ -55,7 +53,7 @@ class MenuView extends StatelessWidget {
     return BlocListener<MenuBloc, MenuState>(
       listener: _listener,
       child: Scaffold(
-        appBar: _appbar(),
+        appBar: _buildAppBar(),
         body: SingleChildScrollView(
           child: SizedBox(
             width: screenSize.width,
@@ -147,7 +145,8 @@ class MenuView extends StatelessWidget {
                           ),
                           label: tag.title,
                           amount: tag.taskAmount,
-                          onTap: () {},
+                          onTap: () =>
+                              _nextPage(context, TaskPage.byTag(tag: tag)),
                         );
                       },
                     );
@@ -162,7 +161,7 @@ class MenuView extends StatelessWidget {
   }
 
   //============================================================================
-  AppBar _appbar() {
+  AppBar _buildAppBar() {
     return AppBar(
       toolbarHeight: 64,
       automaticallyImplyLeading: false,

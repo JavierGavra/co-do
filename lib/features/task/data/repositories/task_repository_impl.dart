@@ -1,10 +1,10 @@
-import 'package:codo/features/task/data/models/task_model.dart';
 import 'package:dartz/dartz.dart' hide Task;
 
-import 'package:codo/core/error/failures.dart';
-import '../../domain/repositories/task_repository.dart';
+import '../../../../core/error/failures.dart';
 import '../../domain/entities/task.dart';
+import '../../domain/repositories/task_repository.dart';
 import '../datasources/task_local_data_source.dart';
+import '../models/task_model.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final TaskLocalDataSource localDataSource;
@@ -48,9 +48,11 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> postTask(Task task) async {
+  Future<Either<Failure, bool>> createTask(Task task) async {
     try {
-      return Right(await localDataSource.postTask(TaskModel.fromEntity(task)));
+      return Right(
+        await localDataSource.insertTask(TaskModel.fromEntity(task)),
+      );
     } catch (e) {
       return Left(CacheFailure());
     }
@@ -60,24 +62,6 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<Either<Failure, bool>> taskChecked(int id, bool status) async {
     try {
       return Right(await localDataSource.taskChecked(id, status));
-    } catch (e) {
-      return Left(CacheFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, int>> getMyDayAmmount() async {
-    try {
-      return Right(await localDataSource.getMyDayAmount());
-    } catch (e) {
-      return Left(CacheFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, int>> getTaskAmount() async {
-    try {
-      return Right(await localDataSource.getTaskAmount());
     } catch (e) {
       return Left(CacheFailure());
     }

@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:codo/core/usecase/usecase.dart';
+import '../../../../core/usecase/usecase.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/usecases/delete_task.dart';
 import '../../domain/usecases/get_all_tasks.dart';
 import '../../domain/usecases/get_my_day.dart';
+import '../../domain/usecases/get_tasks_by_tag.dart';
 import '../../domain/usecases/post_task.dart';
 import '../../domain/usecases/task_checked.dart';
 
@@ -15,19 +16,22 @@ part 'task_state.dart';
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final GetMyDay _getMyDay;
   final GetAllTasks _getAllTasks;
-  final PostTask _postTask;
+  final GetTasksByTag _getTasksByTag;
+  final CreateTask _createTask;
   final DeleteTask _deleteTask;
   final TaskChecked _taskChecked;
 
   TaskBloc({
     required GetMyDay getMyDay,
     required GetAllTasks getAllTasks,
-    required PostTask postTask,
+    required GetTasksByTag getTasksByTag,
+    required CreateTask createTask,
     required DeleteTask deleteTask,
     required TaskChecked taskChecked,
   }) : _getMyDay = getMyDay,
        _getAllTasks = getAllTasks,
-       _postTask = postTask,
+       _getTasksByTag = getTasksByTag,
+       _createTask = createTask,
        _deleteTask = deleteTask,
        _taskChecked = taskChecked,
        super(TaskState.initial()) {
@@ -119,7 +123,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     Emitter<TaskState> emit,
   ) async {
     emit(state.copyWith(action: TaskStateAction.getTask));
-    await _handleTaskFetch(call: () => _getAllTasks(NoParams()), emit: emit);
+    if (event.tagId != null) {
+      await _handleTaskFetch(
+        call: () => _getTasksByTag(GetTasksByTagParams(id: event.tagId!)),
+        emit: emit,
+      );
+    } else {
+      await _handleTaskFetch(call: () => _getAllTasks(NoParams()), emit: emit);
+    }
   }
 
   Future<void> _onCreateTask(
@@ -128,7 +139,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   ) async {
     emit(state.copyWith(action: TaskStateAction.createTask));
     await _handleMutation(
-      call: () => _postTask(PostTaskParams(task: event.task)),
+      call: () => _createTask(CreateTaskParams(task: event.task)),
       emit: emit,
       errorMessage: "Gagal menambahkan tugas",
     );

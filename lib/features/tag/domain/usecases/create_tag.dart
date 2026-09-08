@@ -3,10 +3,10 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
-import '../repositories/menu_repository.dart';
+import '../repositories/tag_repository.dart';
 
 class CreateTag implements UseCase<void, CreateTagParams> {
-  final MenuRepository _repository;
+  final TagRepository _repository;
 
   const CreateTag(this._repository);
 

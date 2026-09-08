@@ -5,21 +5,21 @@ import 'package:codo/core/error/failures.dart';
 import 'package:codo/core/usecase/usecase.dart';
 import '../repositories/tag_repository.dart';
 
-class DeleteTag implements UseCase<bool, DeleteTagParams> {
+class DeleteTagOnly implements UseCase<void, DeleteTagOnlyParams> {
   final TagRepository repository;
 
-  const DeleteTag({required this.repository});
+  const DeleteTagOnly({required this.repository});
 
   @override
-  Future<Either<Failure, bool>> call(DeleteTagParams params) {
-    return repository.deleteTag(params.id);
+  Future<Either<Failure, void>> call(DeleteTagOnlyParams params) {
+    return repository.deleteTagOnly(params.id);
   }
 }
 
-class DeleteTagParams extends Equatable {
+class DeleteTagOnlyParams extends Equatable {
   final int id;
 
-  const DeleteTagParams({required this.id});
+  const DeleteTagOnlyParams({required this.id});
 
   @override
   List<Object> get props => [id];

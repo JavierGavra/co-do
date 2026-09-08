@@ -1,4 +1,4 @@
-import '../../../tag/domain/entities/tag.dart';
+import '../../../../shared/domain/entities/tag.dart';
 import '../../domain/entities/task.dart';
 
 class TaskModel extends Task {

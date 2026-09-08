@@ -1,10 +1,16 @@
+import 'package:codo/features/tag/domain/usecases/create_tag.dart';
+import 'package:codo/features/tag/domain/usecases/delete_tag_with_tasks.dart';
+import 'package:codo/features/tag/domain/usecases/rename_tag.dart';
+import 'package:codo/features/tag/presentasion/bloc/create_tag/create_tag_bloc.dart';
+import 'package:codo/features/tag/presentasion/bloc/delete_tag/delete_tag_bloc.dart';
+import 'package:codo/features/tag/presentasion/bloc/rename_tag/rename_tag_bloc.dart';
+import 'package:codo/features/task/domain/usecases/get_tasks_by_tag.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/database/database_helper.dart';
 import 'features/menu/data/datasources/menu_local_datasource.dart';
 import 'features/menu/data/repositories/menu_repository_impl.dart';
 import 'features/menu/domain/repositories/menu_repository.dart';
-import 'features/menu/domain/usecases/create_tag.dart';
 import 'features/menu/domain/usecases/get_my_day_amount.dart';
 import 'features/menu/domain/usecases/get_tag_menu_items.dart';
 import 'features/menu/domain/usecases/get_task_amount.dart';
@@ -13,7 +19,7 @@ import 'features/menu/presentasion/bloc/menu_bloc.dart';
 import 'features/tag/data/datasource/tag_local_data_source.dart';
 import 'features/tag/data/repositories/tag_repository_impl.dart';
 import 'features/tag/domain/repositories/tag_repository.dart';
-import 'features/tag/domain/usecases/delete_tag.dart';
+import 'features/tag/domain/usecases/delete_tag_only.dart';
 import 'features/tag/domain/usecases/get_tags.dart';
 import 'features/tag/presentasion/cubit/tag_cubit.dart';
 import 'features/task/data/datasources/task_local_data_source.dart';
@@ -44,7 +50,8 @@ void _initTaskFeature() {
     () => TaskBloc(
       getMyDay: sl(),
       getAllTasks: sl(),
-      postTask: sl(),
+      getTasksByTag: sl(),
+      createTask: sl(),
       deleteTask: sl(),
       taskChecked: sl(),
     ),
@@ -53,7 +60,8 @@ void _initTaskFeature() {
   // Usecase
   sl.registerLazySingleton(() => GetMyDay(repository: sl()));
   sl.registerLazySingleton(() => GetAllTasks(repository: sl()));
-  sl.registerLazySingleton(() => PostTask(repository: sl()));
+  sl.registerLazySingleton(() => GetTasksByTag(repository: sl()));
+  sl.registerLazySingleton(() => CreateTask(repository: sl()));
   sl.registerLazySingleton(() => DeleteTask(repository: sl()));
   sl.registerLazySingleton(() => TaskChecked(repository: sl()));
 
@@ -70,10 +78,18 @@ void _initTaskFeature() {
 
 void _initTagFeature() {
   sl.registerFactory(() => TagCubit(getTags: sl()));
+  sl.registerFactory(() => CreateTagBloc(createTag: sl()));
+  sl.registerFactory(
+    () => DeleteTagBloc(deleteTagOnly: sl(), deleteTagWithTasks: sl()),
+  );
+  sl.registerFactory(() => RenameTagBloc(renameTag: sl()));
 
   // Usecase
   sl.registerLazySingleton(() => GetTags(repository: sl()));
-  sl.registerLazySingleton(() => DeleteTag(repository: sl()));
+  sl.registerLazySingleton(() => CreateTag(sl()));
+  sl.registerLazySingleton(() => DeleteTagOnly(repository: sl()));
+  sl.registerLazySingleton(() => DeleteTagWithTasks(sl()));
+  sl.registerLazySingleton(() => RenameTag(sl()));
 
   // Repository
   sl.registerLazySingleton<TagRepository>(
@@ -92,7 +108,6 @@ void _initMenuFeature() {
       getTagMenuItems: sl(),
       getTaskAmount: sl(),
       getMyDayAmount: sl(),
-      createTag: sl(),
       updateTagsOrder: sl(),
     ),
   );
@@ -101,7 +116,7 @@ void _initMenuFeature() {
   sl.registerLazySingleton(() => GetTagMenuItems(sl()));
   sl.registerLazySingleton(() => GetTaskAmount(sl()));
   sl.registerLazySingleton(() => GetMyDayAmount(sl()));
-  sl.registerLazySingleton(() => CreateTag(sl()));
+  // sl.registerLazySingleton(() => CreateTag(sl()));
   sl.registerLazySingleton(() => UpdateTagsOrder(sl()));
 
   // Repository

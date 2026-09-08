@@ -1,3 +1,8 @@
+import 'package:flutter_test/flutter_test.dart';
+
 void main() {
-  // This is a basic Flutter widget test.
+  test('Test', () {
+    final isTrue = true;
+    expect(true, isTrue);
+  });
 }
