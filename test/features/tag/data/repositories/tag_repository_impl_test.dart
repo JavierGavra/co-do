@@ -36,14 +36,16 @@ void main() {
       expect(result, const Right<Failure, List<Tag>>(tTagList));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.getTags()).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.getTags()).thenThrow(CacheException());
 
-      final result = await repository.getTags();
+        final result = await repository.getTags();
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── createTag ──────────────────────────────────────────────────────────
@@ -52,26 +54,32 @@ void main() {
     const tTitle = 'Olahraga';
     const tBgHex = '#00FF00';
 
-    test('harus memanggil insertTag dan mengembalikan Right ketika berhasil',
-        () async {
-      when(mockLocalDataSource.insertTag(tTitle, tBgHex))
-          .thenAnswer((_) async {});
+    test(
+      'harus memanggil insertTag dan mengembalikan Right ketika berhasil',
+      () async {
+        when(
+          mockLocalDataSource.insertTag(tTitle, tBgHex),
+        ).thenAnswer((_) async {});
 
-      final result = await repository.createTag(tTitle, tBgHex);
+        final result = await repository.createTag(tTitle, tBgHex);
 
-      verify(mockLocalDataSource.insertTag(tTitle, tBgHex));
-      expect(result.isRight(), true);
-    });
+        verify(mockLocalDataSource.insertTag(tTitle, tBgHex));
+        expect(result.isRight(), true);
+      },
+    );
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.insertTag(tTitle, tBgHex))
-          .thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(
+          mockLocalDataSource.insertTag(tTitle, tBgHex),
+        ).thenThrow(CacheException());
 
-      final result = await repository.createTag(tTitle, tBgHex);
+        final result = await repository.createTag(tTitle, tBgHex);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── renameTag ──────────────────────────────────────────────────────────
@@ -80,26 +88,32 @@ void main() {
     const tId = 1;
     const tNewTitle = 'Olahraga Pagi';
 
-    test('harus memanggil renameTag dan mengembalikan Right ketika berhasil',
-        () async {
-      when(mockLocalDataSource.renameTag(tId, tNewTitle))
-          .thenAnswer((_) async {});
+    test(
+      'harus memanggil renameTag dan mengembalikan Right ketika berhasil',
+      () async {
+        when(
+          mockLocalDataSource.renameTag(tId, tNewTitle),
+        ).thenAnswer((_) async {});
 
-      final result = await repository.renameTag(tId, tNewTitle);
+        final result = await repository.renameTag(tId, tNewTitle);
 
-      verify(mockLocalDataSource.renameTag(tId, tNewTitle));
-      expect(result.isRight(), true);
-    });
+        verify(mockLocalDataSource.renameTag(tId, tNewTitle));
+        expect(result.isRight(), true);
+      },
+    );
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.renameTag(tId, tNewTitle))
-          .thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(
+          mockLocalDataSource.renameTag(tId, tNewTitle),
+        ).thenThrow(CacheException());
 
-      final result = await repository.renameTag(tId, tNewTitle);
+        final result = await repository.renameTag(tId, tNewTitle);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── deleteTagOnly ──────────────────────────────────────────────────────
@@ -107,24 +121,30 @@ void main() {
   group('deleteTagOnly', () {
     const tId = 1;
 
-    test('harus memanggil deleteTagOnly dan mengembalikan Right ketika berhasil',
-        () async {
-      when(mockLocalDataSource.deleteTagOnly(tId)).thenAnswer((_) async {});
+    test(
+      'harus memanggil deleteTagOnly dan mengembalikan Right ketika berhasil',
+      () async {
+        when(mockLocalDataSource.deleteTagOnly(tId)).thenAnswer((_) async {});
 
-      final result = await repository.deleteTagOnly(tId);
+        final result = await repository.deleteTagOnly(tId);
 
-      verify(mockLocalDataSource.deleteTagOnly(tId));
-      expect(result.isRight(), true);
-    });
+        verify(mockLocalDataSource.deleteTagOnly(tId));
+        expect(result.isRight(), true);
+      },
+    );
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.deleteTagOnly(tId)).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(
+          mockLocalDataSource.deleteTagOnly(tId),
+        ).thenThrow(CacheException());
 
-      final result = await repository.deleteTagOnly(tId);
+        final result = await repository.deleteTagOnly(tId);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── deleteTagWithTasks ─────────────────────────────────────────────────
@@ -133,25 +153,30 @@ void main() {
     const tId = 1;
 
     test(
-        'harus memanggil deleteTagWithTasks dan mengembalikan Right ketika berhasil',
-        () async {
-      when(mockLocalDataSource.deleteTagWithTasks(tId))
-          .thenAnswer((_) async {});
+      'harus memanggil deleteTagWithTasks dan mengembalikan Right ketika berhasil',
+      () async {
+        when(
+          mockLocalDataSource.deleteTagWithTasks(tId),
+        ).thenAnswer((_) async {});
 
-      final result = await repository.deleteTagWithTasks(tId);
+        final result = await repository.deleteTagWithTasks(tId);
 
-      verify(mockLocalDataSource.deleteTagWithTasks(tId));
-      expect(result.isRight(), true);
-    });
+        verify(mockLocalDataSource.deleteTagWithTasks(tId));
+        expect(result.isRight(), true);
+      },
+    );
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.deleteTagWithTasks(tId))
-          .thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(
+          mockLocalDataSource.deleteTagWithTasks(tId),
+        ).thenThrow(CacheException());
 
-      final result = await repository.deleteTagWithTasks(tId);
+        final result = await repository.deleteTagWithTasks(tId);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 }

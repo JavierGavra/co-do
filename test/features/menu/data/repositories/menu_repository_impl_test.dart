@@ -36,8 +36,9 @@ void main() {
     const tAmount = 10;
 
     test('harus mengembalikan Right(int) ketika berhasil', () async {
-      when(mockLocalDataSource.getTaskAmount())
-          .thenAnswer((_) async => tAmount);
+      when(
+        mockLocalDataSource.getTaskAmount(),
+      ).thenAnswer((_) async => tAmount);
 
       final result = await repository.getTaskAmount();
 
@@ -45,14 +46,16 @@ void main() {
       expect(result, const Right<Failure, int>(tAmount));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.getTaskAmount()).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.getTaskAmount()).thenThrow(CacheException());
 
-      final result = await repository.getTaskAmount();
+        final result = await repository.getTaskAmount();
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── getMyDayAmount ─────────────────────────────────────────────────────
@@ -61,8 +64,9 @@ void main() {
     const tAmount = 5;
 
     test('harus mengembalikan Right(int) ketika berhasil', () async {
-      when(mockLocalDataSource.getMyDayAmount())
-          .thenAnswer((_) async => tAmount);
+      when(
+        mockLocalDataSource.getMyDayAmount(),
+      ).thenAnswer((_) async => tAmount);
 
       final result = await repository.getMyDayAmount();
 
@@ -70,37 +74,43 @@ void main() {
       expect(result, const Right<Failure, int>(tAmount));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.getMyDayAmount()).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.getMyDayAmount()).thenThrow(CacheException());
 
-      final result = await repository.getMyDayAmount();
+        final result = await repository.getMyDayAmount();
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── getTagMenuItems ────────────────────────────────────────────────────
 
   group('getTagMenuItems', () {
-    test('harus mengembalikan Right(List<TagMenuItem>) ketika berhasil',
-        () async {
-      when(mockLocalDataSource.getTags()).thenAnswer((_) async => tTagList);
+    test(
+      'harus mengembalikan Right(List<TagMenuItem>) ketika berhasil',
+      () async {
+        when(mockLocalDataSource.getTags()).thenAnswer((_) async => tTagList);
 
-      final result = await repository.getTagMenuItems();
+        final result = await repository.getTagMenuItems();
 
-      verify(mockLocalDataSource.getTags());
-      expect(result, const Right<Failure, List<TagMenuItem>>(tTagList));
-    });
+        verify(mockLocalDataSource.getTags());
+        expect(result, const Right<Failure, List<TagMenuItem>>(tTagList));
+      },
+    );
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.getTags()).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.getTags()).thenThrow(CacheException());
 
-      final result = await repository.getTagMenuItems();
+        final result = await repository.getTagMenuItems();
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── updateTagsOrder ────────────────────────────────────────────────────
@@ -108,23 +118,29 @@ void main() {
   group('updateTagsOrder', () {
     const tParams = UpdateTagsOrderParams(tags: [tTagModel]);
 
-    test('harus memanggil updateTagsOrder dan mengembalikan Right ketika berhasil',
-        () async {
-      when(mockLocalDataSource.updateTagsOrder(any)).thenAnswer((_) async {});
+    test(
+      'harus memanggil updateTagsOrder dan mengembalikan Right ketika berhasil',
+      () async {
+        when(mockLocalDataSource.updateTagsOrder(any)).thenAnswer((_) async {});
 
-      final result = await repository.updateTagsOrder(tParams);
+        final result = await repository.updateTagsOrder(tParams);
 
-      verify(mockLocalDataSource.updateTagsOrder(any));
-      expect(result.isRight(), true);
-    });
+        verify(mockLocalDataSource.updateTagsOrder(any));
+        expect(result.isRight(), true);
+      },
+    );
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.updateTagsOrder(any)).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(
+          mockLocalDataSource.updateTagsOrder(any),
+        ).thenThrow(CacheException());
 
-      final result = await repository.updateTagsOrder(tParams);
+        final result = await repository.updateTagsOrder(tParams);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 }

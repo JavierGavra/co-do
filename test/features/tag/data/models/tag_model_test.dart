@@ -14,11 +14,7 @@ void main() {
 
     group('fromJson', () {
       test('harus mengembalikan TagModel yang valid dari Map', () {
-        final json = {
-          'id': 1,
-          'title': 'Kuliah',
-          'background_hex': '#FF5733',
-        };
+        final json = {'id': 1, 'title': 'Kuliah', 'background_hex': '#FF5733'};
 
         final result = TagModel.fromJson(json);
 

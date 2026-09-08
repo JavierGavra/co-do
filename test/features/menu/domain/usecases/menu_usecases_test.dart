@@ -35,8 +35,9 @@ void main() {
     const tAmount = 10;
 
     test('harus memanggil repository.getTaskAmount()', () async {
-      when(mockRepository.getTaskAmount())
-          .thenAnswer((_) async => const Right(tAmount));
+      when(
+        mockRepository.getTaskAmount(),
+      ).thenAnswer((_) async => const Right(tAmount));
 
       final usecase = GetTaskAmount(mockRepository);
       final result = await usecase(NoParams());
@@ -52,8 +53,9 @@ void main() {
     const tAmount = 5;
 
     test('harus memanggil repository.getMyDayAmount()', () async {
-      when(mockRepository.getMyDayAmount())
-          .thenAnswer((_) async => const Right(tAmount));
+      when(
+        mockRepository.getMyDayAmount(),
+      ).thenAnswer((_) async => const Right(tAmount));
 
       final usecase = GetMyDayAmount(mockRepository);
       final result = await usecase(NoParams());
@@ -67,8 +69,9 @@ void main() {
 
   group('GetTagMenuItems', () {
     test('harus memanggil repository.getTagMenuItems()', () async {
-      when(mockRepository.getTagMenuItems())
-          .thenAnswer((_) async => const Right(tTagMenuList));
+      when(
+        mockRepository.getTagMenuItems(),
+      ).thenAnswer((_) async => const Right(tTagMenuList));
 
       final usecase = GetTagMenuItems(mockRepository);
       final result = await usecase(NoParams());
@@ -83,16 +86,19 @@ void main() {
   group('UpdateTagsOrder', () {
     const tParams = UpdateTagsOrderParams(tags: [tTagMenuItem]);
 
-    test('harus memanggil repository.updateTagsOrder() dengan params yang benar',
-        () async {
-      when(mockRepository.updateTagsOrder(tParams))
-          .thenAnswer((_) async => const Right(null));
+    test(
+      'harus memanggil repository.updateTagsOrder() dengan params yang benar',
+      () async {
+        when(
+          mockRepository.updateTagsOrder(tParams),
+        ).thenAnswer((_) async => const Right(null));
 
-      final usecase = UpdateTagsOrder(mockRepository);
-      final result = await usecase(tParams);
+        final usecase = UpdateTagsOrder(mockRepository);
+        final result = await usecase(tParams);
 
-      verify(mockRepository.updateTagsOrder(tParams));
-      expect(result.isRight(), true);
-    });
+        verify(mockRepository.updateTagsOrder(tParams));
+        expect(result.isRight(), true);
+      },
+    );
   });
 }

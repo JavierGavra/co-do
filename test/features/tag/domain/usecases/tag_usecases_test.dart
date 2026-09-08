@@ -29,8 +29,9 @@ void main() {
 
   group('GetTags', () {
     test('harus memanggil repository.getTags()', () async {
-      when(mockRepository.getTags())
-          .thenAnswer((_) async => const Right(tTagList));
+      when(
+        mockRepository.getTags(),
+      ).thenAnswer((_) async => const Right(tTagList));
 
       final usecase = GetTags(repository: mockRepository);
       final result = await usecase(NoParams());
@@ -46,19 +47,22 @@ void main() {
     const tTitle = 'Olahraga';
     const tBgHex = '#00FF00';
 
-    test('harus memanggil repository.createTag() dengan params yang benar',
-        () async {
-      when(mockRepository.createTag(tTitle, tBgHex))
-          .thenAnswer((_) async => const Right(null));
+    test(
+      'harus memanggil repository.createTag() dengan params yang benar',
+      () async {
+        when(
+          mockRepository.createTag(tTitle, tBgHex),
+        ).thenAnswer((_) async => const Right(null));
 
-      final usecase = CreateTag(mockRepository);
-      final result = await usecase(
-        const CreateTagParams(title: tTitle, backgroundHex: tBgHex),
-      );
+        final usecase = CreateTag(mockRepository);
+        final result = await usecase(
+          const CreateTagParams(title: tTitle, backgroundHex: tBgHex),
+        );
 
-      verify(mockRepository.createTag(tTitle, tBgHex));
-      expect(result.isRight(), true);
-    });
+        verify(mockRepository.createTag(tTitle, tBgHex));
+        expect(result.isRight(), true);
+      },
+    );
   });
 
   // ─── RenameTag ──────────────────────────────────────────────────────────
@@ -67,19 +71,22 @@ void main() {
     const tId = 1;
     const tNewTitle = 'Olahraga Pagi';
 
-    test('harus memanggil repository.renameTag() dengan params yang benar',
-        () async {
-      when(mockRepository.renameTag(tId, tNewTitle))
-          .thenAnswer((_) async => const Right(null));
+    test(
+      'harus memanggil repository.renameTag() dengan params yang benar',
+      () async {
+        when(
+          mockRepository.renameTag(tId, tNewTitle),
+        ).thenAnswer((_) async => const Right(null));
 
-      final usecase = RenameTag(mockRepository);
-      final result = await usecase(
-        const RenameTagParams(tagId: tId, newTitle: tNewTitle),
-      );
+        final usecase = RenameTag(mockRepository);
+        final result = await usecase(
+          const RenameTagParams(tagId: tId, newTitle: tNewTitle),
+        );
 
-      verify(mockRepository.renameTag(tId, tNewTitle));
-      expect(result.isRight(), true);
-    });
+        verify(mockRepository.renameTag(tId, tNewTitle));
+        expect(result.isRight(), true);
+      },
+    );
   });
 
   // ─── DeleteTagOnly ──────────────────────────────────────────────────────
@@ -87,17 +94,20 @@ void main() {
   group('DeleteTagOnly', () {
     const tId = 1;
 
-    test('harus memanggil repository.deleteTagOnly() dengan id yang benar',
-        () async {
-      when(mockRepository.deleteTagOnly(tId))
-          .thenAnswer((_) async => const Right(null));
+    test(
+      'harus memanggil repository.deleteTagOnly() dengan id yang benar',
+      () async {
+        when(
+          mockRepository.deleteTagOnly(tId),
+        ).thenAnswer((_) async => const Right(null));
 
-      final usecase = DeleteTagOnly(repository: mockRepository);
-      final result = await usecase(const DeleteTagOnlyParams(id: tId));
+        final usecase = DeleteTagOnly(repository: mockRepository);
+        final result = await usecase(const DeleteTagOnlyParams(id: tId));
 
-      verify(mockRepository.deleteTagOnly(tId));
-      expect(result.isRight(), true);
-    });
+        verify(mockRepository.deleteTagOnly(tId));
+        expect(result.isRight(), true);
+      },
+    );
   });
 
   // ─── DeleteTagWithTasks ─────────────────────────────────────────────────
@@ -106,16 +116,18 @@ void main() {
     const tId = 1;
 
     test(
-        'harus memanggil repository.deleteTagWithTasks() dengan id yang benar',
-        () async {
-      when(mockRepository.deleteTagWithTasks(tId))
-          .thenAnswer((_) async => const Right(null));
+      'harus memanggil repository.deleteTagWithTasks() dengan id yang benar',
+      () async {
+        when(
+          mockRepository.deleteTagWithTasks(tId),
+        ).thenAnswer((_) async => const Right(null));
 
-      final usecase = DeleteTagWithTasks(mockRepository);
-      final result = await usecase(const DeleteTagWithTasksParams(id: tId));
+        final usecase = DeleteTagWithTasks(mockRepository);
+        final result = await usecase(const DeleteTagWithTasksParams(id: tId));
 
-      verify(mockRepository.deleteTagWithTasks(tId));
-      expect(result.isRight(), true);
-    });
+        verify(mockRepository.deleteTagWithTasks(tId));
+        expect(result.isRight(), true);
+      },
+    );
   });
 }

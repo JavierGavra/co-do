@@ -21,19 +21,16 @@ void main() {
     repository = TaskRepositoryImpl(localDataSource: mockLocalDataSource);
   });
 
-  const tTaskModel = TaskModel(
-    id: 1,
-    title: 'Belajar Flutter',
-    status: false,
-  );
+  const tTaskModel = TaskModel(id: 1, title: 'Belajar Flutter', status: false);
   const List<TaskModel> tTaskList = [tTaskModel];
 
   // ─── getAllTasks ────────────────────────────────────────────────────────
 
   group('getAllTasks', () {
     test('harus mengembalikan Right(List<Task>) ketika berhasil', () async {
-      when(mockLocalDataSource.getAllTasks())
-          .thenAnswer((_) async => tTaskList);
+      when(
+        mockLocalDataSource.getAllTasks(),
+      ).thenAnswer((_) async => tTaskList);
 
       final result = await repository.getAllTasks();
 
@@ -41,15 +38,17 @@ void main() {
       expect(result, const Right<Failure, List<Task>>(tTaskList));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.getAllTasks()).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.getAllTasks()).thenThrow(CacheException());
 
-      final result = await repository.getAllTasks();
+        final result = await repository.getAllTasks();
 
-      verify(mockLocalDataSource.getAllTasks());
-      expect(result, Left(CacheFailure()));
-    });
+        verify(mockLocalDataSource.getAllTasks());
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── getMyDay ──────────────────────────────────────────────────────────
@@ -64,14 +63,16 @@ void main() {
       expect(result, const Right<Failure, List<Task>>(tTaskList));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.getMyDay()).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.getMyDay()).thenThrow(CacheException());
 
-      final result = await repository.getMyDay();
+        final result = await repository.getMyDay();
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── getTasksByTag ─────────────────────────────────────────────────────
@@ -80,8 +81,9 @@ void main() {
     const tTagId = 1;
 
     test('harus mengembalikan Right(List<Task>) ketika berhasil', () async {
-      when(mockLocalDataSource.getTasksByCategory(tTagId))
-          .thenAnswer((_) async => tTaskList);
+      when(
+        mockLocalDataSource.getTasksByCategory(tTagId),
+      ).thenAnswer((_) async => tTaskList);
 
       final result = await repository.getTasksByTag(tTagId);
 
@@ -89,15 +91,18 @@ void main() {
       expect(result, const Right<Failure, List<Task>>(tTaskList));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.getTasksByCategory(tTagId))
-          .thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(
+          mockLocalDataSource.getTasksByCategory(tTagId),
+        ).thenThrow(CacheException());
 
-      final result = await repository.getTasksByTag(tTagId);
+        final result = await repository.getTasksByTag(tTagId);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── createTask ────────────────────────────────────────────────────────
@@ -113,14 +118,16 @@ void main() {
       expect(result, const Right<Failure, bool>(true));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.insertTask(any)).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.insertTask(any)).thenThrow(CacheException());
 
-      final result = await repository.createTask(tTask);
+        final result = await repository.createTask(tTask);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── deleteTask ────────────────────────────────────────────────────────
@@ -137,14 +144,16 @@ void main() {
       expect(result, const Right<Failure, bool>(true));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.deleteTask(tId)).thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(mockLocalDataSource.deleteTask(tId)).thenThrow(CacheException());
 
-      final result = await repository.deleteTask(tId);
+        final result = await repository.deleteTask(tId);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 
   // ─── taskChecked ───────────────────────────────────────────────────────
@@ -154,8 +163,9 @@ void main() {
     const tStatus = true;
 
     test('harus mengembalikan Right(true) ketika berhasil', () async {
-      when(mockLocalDataSource.taskChecked(tId, tStatus))
-          .thenAnswer((_) async => true);
+      when(
+        mockLocalDataSource.taskChecked(tId, tStatus),
+      ).thenAnswer((_) async => true);
 
       final result = await repository.taskChecked(tId, tStatus);
 
@@ -163,14 +173,17 @@ void main() {
       expect(result, const Right<Failure, bool>(true));
     });
 
-    test('harus mengembalikan Left(CacheFailure) ketika terjadi exception',
-        () async {
-      when(mockLocalDataSource.taskChecked(tId, tStatus))
-          .thenThrow(CacheException());
+    test(
+      'harus mengembalikan Left(CacheFailure) ketika terjadi exception',
+      () async {
+        when(
+          mockLocalDataSource.taskChecked(tId, tStatus),
+        ).thenThrow(CacheException());
 
-      final result = await repository.taskChecked(tId, tStatus);
+        final result = await repository.taskChecked(tId, tStatus);
 
-      expect(result, Left(CacheFailure()));
-    });
+        expect(result, Left(CacheFailure()));
+      },
+    );
   });
 }

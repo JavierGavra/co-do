@@ -30,8 +30,9 @@ void main() {
 
   group('GetAllTasks', () {
     test('harus memanggil repository.getAllTasks()', () async {
-      when(mockRepository.getAllTasks())
-          .thenAnswer((_) async => const Right(tTaskList));
+      when(
+        mockRepository.getAllTasks(),
+      ).thenAnswer((_) async => const Right(tTaskList));
 
       final usecase = GetAllTasks(repository: mockRepository);
       final result = await usecase(NoParams());
@@ -45,8 +46,9 @@ void main() {
 
   group('GetMyDay', () {
     test('harus memanggil repository.getMyDay()', () async {
-      when(mockRepository.getMyDay())
-          .thenAnswer((_) async => const Right(tTaskList));
+      when(
+        mockRepository.getMyDay(),
+      ).thenAnswer((_) async => const Right(tTaskList));
 
       final usecase = GetMyDay(repository: mockRepository);
       final result = await usecase(NoParams());
@@ -61,33 +63,39 @@ void main() {
   group('GetTasksByTag', () {
     const tTagId = 5;
 
-    test('harus memanggil repository.getTasksByTag() dengan id yang benar',
-        () async {
-      when(mockRepository.getTasksByTag(tTagId))
-          .thenAnswer((_) async => const Right(tTaskList));
+    test(
+      'harus memanggil repository.getTasksByTag() dengan id yang benar',
+      () async {
+        when(
+          mockRepository.getTasksByTag(tTagId),
+        ).thenAnswer((_) async => const Right(tTaskList));
 
-      final usecase = GetTasksByTag(repository: mockRepository);
-      final result = await usecase(const GetTasksByTagParams(id: tTagId));
+        final usecase = GetTasksByTag(repository: mockRepository);
+        final result = await usecase(const GetTasksByTagParams(id: tTagId));
 
-      verify(mockRepository.getTasksByTag(tTagId));
-      expect(result, const Right<Failure, List<Task>>(tTaskList));
-    });
+        verify(mockRepository.getTasksByTag(tTagId));
+        expect(result, const Right<Failure, List<Task>>(tTaskList));
+      },
+    );
   });
 
   // ─── CreateTask ────────────────────────────────────────────────────────
 
   group('CreateTask', () {
-    test('harus memanggil repository.createTask() dengan task yang benar',
-        () async {
-      when(mockRepository.createTask(tTask))
-          .thenAnswer((_) async => const Right(true));
+    test(
+      'harus memanggil repository.createTask() dengan task yang benar',
+      () async {
+        when(
+          mockRepository.createTask(tTask),
+        ).thenAnswer((_) async => const Right(true));
 
-      final usecase = CreateTask(repository: mockRepository);
-      final result = await usecase(const CreateTaskParams(task: tTask));
+        final usecase = CreateTask(repository: mockRepository);
+        final result = await usecase(const CreateTaskParams(task: tTask));
 
-      verify(mockRepository.createTask(tTask));
-      expect(result, const Right<Failure, bool>(true));
-    });
+        verify(mockRepository.createTask(tTask));
+        expect(result, const Right<Failure, bool>(true));
+      },
+    );
   });
 
   // ─── DeleteTask ────────────────────────────────────────────────────────
@@ -95,17 +103,20 @@ void main() {
   group('DeleteTask', () {
     const tId = 1;
 
-    test('harus memanggil repository.deleteTask() dengan id yang benar',
-        () async {
-      when(mockRepository.deleteTask(tId))
-          .thenAnswer((_) async => const Right(true));
+    test(
+      'harus memanggil repository.deleteTask() dengan id yang benar',
+      () async {
+        when(
+          mockRepository.deleteTask(tId),
+        ).thenAnswer((_) async => const Right(true));
 
-      final usecase = DeleteTask(repository: mockRepository);
-      final result = await usecase(const DeleteTaskParams(id: tId));
+        final usecase = DeleteTask(repository: mockRepository);
+        final result = await usecase(const DeleteTaskParams(id: tId));
 
-      verify(mockRepository.deleteTask(tId));
-      expect(result, const Right<Failure, bool>(true));
-    });
+        verify(mockRepository.deleteTask(tId));
+        expect(result, const Right<Failure, bool>(true));
+      },
+    );
   });
 
   // ─── TaskChecked ───────────────────────────────────────────────────────
@@ -114,18 +125,21 @@ void main() {
     const tId = 1;
     const tStatus = true;
 
-    test('harus memanggil repository.taskChecked() dengan id dan status benar',
-        () async {
-      when(mockRepository.taskChecked(tId, tStatus))
-          .thenAnswer((_) async => const Right(true));
+    test(
+      'harus memanggil repository.taskChecked() dengan id dan status benar',
+      () async {
+        when(
+          mockRepository.taskChecked(tId, tStatus),
+        ).thenAnswer((_) async => const Right(true));
 
-      final usecase = TaskChecked(repository: mockRepository);
-      final result = await usecase(
-        const TaskCheckedParams(id: tId, status: tStatus),
-      );
+        final usecase = TaskChecked(repository: mockRepository);
+        final result = await usecase(
+          const TaskCheckedParams(id: tId, status: tStatus),
+        );
 
-      verify(mockRepository.taskChecked(tId, tStatus));
-      expect(result, const Right<Failure, bool>(true));
-    });
+        verify(mockRepository.taskChecked(tId, tStatus));
+        expect(result, const Right<Failure, bool>(true));
+      },
+    );
   });
 }
